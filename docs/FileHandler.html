@@ -1,0 +1,42 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>Robin Hood Web Server - File Handler</title>
+</HEAD>
+<BODY bgcolor="#14458E" text="#FFFFFF" link="#84B5FE" vlink="#84B5FE" alink="#84B5FE">
+	<CENTER><TABLE align="CENTER" border=0 width="100%" CELLSPACING="0"><TR bgcolor="#04357E">
+	<TD width="100%" height="45" ALIGN="CENTER" valign="CENTER"><font COLOR="#FFFFFF" size="+3">
+	File Handler <IMG SRC="RHicon.gif" ALIGN="absmiddle"></FONT></TD>
+	<TD height="45" ALIGN="RIGHT" valign="CENTER"><A HREF="../Robin%20Hood%20Docs"><IMG SRC="home.gif" ALIGN="absmiddle" BORDER="0"></A>&nbsp;&nbsp;&nbsp;</TD>
+	</TR></TABLE></CENTER>
+	<P>MIME Types: <B>*, application/x-vnd.RHV.File</B>
+	<P>Methods: <B>GET, HEAD</B>
+	<P>Priority: <B>5, 15</B> - for application/x-vnd.RHV.File
+	<P>Suggested Virtual Resources: <B>None</B>
+	<P>Virtual Resource Extras: <B>None</B><BR>
+	<HR>
+	<P>The file handler transfers the file specified in the URL without modification. 
+	The native MIME type and size of the file are reported in the reply. The file handler 
+	supports "If-modified..." headers. This allows the server to report when 
+	a file has not been modified since the last time the browser retrieved the file.
+	
+	<P>If a client claims to support gzip encoding and a file with the same name
+	as the requested resource + ".gz" is present, the File Handler will substitute
+	the gzip file. For example, if a client requests /foo/bar.html and a file named
+	/foo/bar.html.gz exists, the gzip file will be sent instead. Robin Hood will 
+	not compress the file on the fly. You will have to gzip the file yourself. 
+	Some browsers may claim to support gzip encoding when they really do not.
+	You should be aware of this before blaiming Robin Hood if it does not work.
+	
+	<P>The file handler supports byte-ranges and can send only a part of a file
+	if requested. This is useful for error recovery and certain streaming media
+	applications.<BR>
+	<HR>
+	<FONT COLOR="#FEB584">Robin Hood Web Server for BeOS</FONT><BR>
+	Copyright &#169; 1999-2001<BR>
+	The Robin Hood Development Team (see <A HREF="Revision.html">Revision History</A> for details)
+	<P><FONT COLOR="#4488FF">Be</FONT><FONT COLOR="#FF8844">OS</FONT> is a registered trademark of Be Inc.<BR><BR>
+	
+</BODY>
+</HTML>

@@ -1,0 +1,41 @@
+
+	This is a simple PHP Handler for RobinHood
+	
+	by Daniel Fischer <dan@f3c.com>
+	
+	
+	version log:
+		1	2001-01-04	initial release
+	
+	
+	prerequisites:
+		BeOS 5.0 ( http://free.be.com/ )
+		RobinHood WebServer 1.1 ( http://www.bebits.com/app/322 )
+		PHP 4.0.0 ( http://www.bebits.com/app/566 )
+			the "php" executable must reside in /boot/home/config/bin
+		
+		
+	to compile:
+		move the PHPHandler Folder to "modules" in the RobinHood Source Folder
+		
+		$ cd {...}/PHPHandler
+		$ make
+		
+		x86 binary is included.
+		PPC hasn't been tried.
+		
+		
+	to install,
+		- move "PHPHandler" from {...}/PHPHandler/obj.x86/
+			to {...}/RobinHoodx86/server/robin_hood_modules/
+		- insert the line
+				VRes: pattern="*.php" type="application/x-httpd-php" real=true;
+			into your virtual_hosts file for any host you want to run PHP scripts with.
+		- make sure the "php" executable resides in /boot/home/config/bin
+		- (re)launch RobinHood			
+		
+		all .php files should work now without further wrappers or shebang lines,
+		but they still have to be marked executable.
+		
+	
+	have fun.

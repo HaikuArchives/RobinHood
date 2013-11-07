@@ -1,0 +1,112 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>Robin Hood Web Server - SSI Handler</title>
+</HEAD>
+<BODY bgcolor="#14458E" text="#FFFFFF" link="#84B5FE" vlink="#84B5FE" alink="#84B5FE">
+	<CENTER><TABLE align="CENTER" border=0 width="100%" CELLSPACING="0"><TR bgcolor="#04357E">
+	<TD width="100%" height="45" ALIGN="CENTER" valign="CENTER"><font COLOR="#FFFFFF" size="+3">
+	SSI Handler <IMG SRC="RHicon.gif" ALIGN="absmiddle"></FONT></TD>
+	<TD height="45" ALIGN="RIGHT" valign="CENTER"><A HREF="../Robin%20Hood%20Docs"><IMG SRC="home.gif" ALIGN="absmiddle" BORDER="0"></A>&nbsp;&nbsp;&nbsp;</TD>
+	</TR></TABLE></CENTER>
+	<P>MIME Types: <B>text/x-server-parsed-html</B>
+	<P>Methods: <B>GET, HEAD</B>
+	<P>Priority: <B>10</B>
+	<P>Suggested Virtual Resources: 
+	<UL>
+		<LI><FONT COLOR="#6495DE"><B>VRes: pattern="*.shtml" type="text/x-server-parsed-html" real=true;</B></FONT>
+		<BR>Any file ending with .shtml will be processed by the SSI Handler.</LI>
+	</UL>
+	Virtual Resource Extras: <B>None</B><BR>
+	<HR>
+	<P>The SSI Handler (Server Side Includes)
+	will parse the specified shtml document and inline the output from any SSI commands 
+	found in the document. This provides a powerful mechanism for creating dynamic html 
+	pages. Parsing shtml documents is not as fast as calling the file handler to transfer 
+	a document, and having many shtml documents may impact the performance of a heavily 
+	loaded server.</P>
+	<P>SSI commands take the form of html comments. This prevents them from being displayed 
+	should the document ever end up in the hands of a client unparsed. Each SSI command 
+	has the following format:</P>
+	<BLOCKQUOTE>
+	&lt;!--#command tag1=value1 tag2=value2 ... --&gt;
+	</BLOCKQUOTE>
+	<FONT SIZE="+1"><B>Supported Commands</B></FONT>
+	<UL>
+		<LI><B>config</B> - Configure the output of other commands.
+		<P>Tags:</LI>
+		<UL>
+			<LI><B>errmsg</B> - Error message to be inlined when a command could not be 
+			completed. The default error string is "SSI Parse Error"</LI>
+			<LI><B>timefmt</B> - The format to be used for all commands which display a 
+			time. The format is the same as is accepted by the strftime() call in the 
+			standard C library. The default format is "%a, %d %b %Y %H:%M:%S"</LI>
+			<LI><B>sizefmt</B> - The format to be used for displaying file sizes. This 
+			is a printf() formatting string. The file size is a long int. Make sure 
+			your format is for a long int or you may crash the server! The default format 
+			is "%ld"</LI>
+		</UL>
+		<P><LI><B>echo</B> - Print the output of one of the SSI Environment Variables. The 
+		only tag supported, "var", can have the following values.</LI>
+		<UL>
+			<LI><B>DOCUMENT_NAME</B> - The name of the current document.</LI>
+			<LI><B>DOCUMENT_URI</B> - The virtual path of the current document.</LI>
+			<LI><B>QUERY_STRING_UNESCAPED</B> - The query string from the URI.</LI>
+			<LI><B>DATE_LOCAL</B> - The local time formatted by config:timefmt.</LI>
+			<LI><B>DATE_GMT</B> - GMT Time formatted by config:timefmt.</LI>
+			<LI><B>LAST_MODIFIED</B> - The last modification date of this file formatter 
+			by config:timefmt.</LI>
+		</UL>
+		<P><LI><B>include</B> - Include the contents of another file. If the other
+		file has a MIME type of "text/x-server-parsed-html" it will be parsed as well.
+		Virtual Resources are NOT checked when determining the MIME type of the included
+		file. If SSI is executed recursively by the include command, the recursed
+		document's echo command will display the information for the calling document.
+		If you wish to ensure the Virtual Resources are checked first and/or would like
+		the sub-document echo command to display its own document information, SSI
+		documents can be included recursively with the "exec cgi=..." command. Keep in
+		mind that using "exec cgi=..." is not as efficient as the include command. Make sure
+		a document does not recursively include itself. This would be a <EM>VERY</EM> bad
+		thing!
+		<P>Tags:</LI>
+		<P><UL>
+			<LI><B>file</B> - The tag-value is an absolute path.</LI>
+			<LI><B>virtual</B> - The tag-value is a virtual path. ( The root is the 
+			Webroot for the specified virtual host. )</LI>
+		</UL>
+		<P><LI><B>fsize</B> - Display the size of the file specified by the tag. It is 
+		formatted based on config:sizefmt. The tags are the same as for the <I>include</I> 
+		command.</LI>
+		<P><LI><B>flastmod</B> - Display the last modification date of the file specified by 
+		the tag. It is formatted based on config:datefmt. The tags are the same as for the 
+		<I>include</I> command.</LI>
+		<P><LI><B>exec</B> - Execute a program and inline the output of the program.
+		<P>Tags:</LI>
+		<P><UL>
+			<LI><B>cmd</B> - Execute the shell command specified in the tag value and 
+			inline its output.</LI>
+			<LI><B>cgi</B> - The standard behaviour of the cgi tag is to inline the output 
+			of the specified CGI. The SSI handler actually makes a request to the module 
+			roster to handle the request. This means Virtual Resources will be checked 
+			before handling the request. It can actually get any resource which the 
+			module roster can retrieve. It could be a CGI, another SSI, a directory listing, 
+			a file, or a redirect. If a redirect is returned, an html anchor of the form 
+			&lt;A HREF="location"&gt; will be inlined. The SSI handler will only inline 
+			the output if the MIME supertype of the returned resource is "text". This 
+			makes sure that, for example, the contents of a GIF image are not inlined.</LI>
+			<LI><B>html</B> - If this tag has a value of "true" and is placed before a 
+			<I>cgi</I> tag, only the body of the returned HTML document will be 
+			included. This tag is ignored if the cgi request is some other type of text 
+			other than HTML (text/plain for example). The parsing required to do this takes additional time. Only 
+			use it if you need it!</LI>
+		</UL>
+	</UL>
+	<HR>
+	<FONT COLOR="#FEB584">Robin Hood Web Server for BeOS</FONT><BR>
+	Copyright &#169; 1999-2001<BR>
+	The Robin Hood Development Team (see <A HREF="Revision.html">Revision History</A> for details)
+	<P><FONT COLOR="#4488FF">Be</FONT><FONT COLOR="#FF8844">OS</FONT> is a registered trademark of Be Inc.<BR><BR>
+	
+</BODY>
+</HTML>

@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>Robin Hood Web Server - Installation &amp; Getting Started</title>
+</HEAD>
+<BODY bgcolor="#14458E" text="#FFFFFF" link="#84B5FE" vlink="#84B5FE" alink="#84B5FE">
+	<CENTER><TABLE align="CENTER" border=0 width="100%" CELLSPACING="0"><TR bgcolor="#04357E">
+	<TD width="100%" height="45" ALIGN="CENTER" valign="CENTER"><FONT COLOR="#FFFFFF" size="+3">
+	Installation &amp; Getting Started <IMG SRC="RHicon.gif" ALIGN="absmiddle"></FONT></TD>
+	<TD height="45" ALIGN="RIGHT" valign="CENTER"><A HREF="../Robin%20Hood%20Docs"><IMG SRC="home.gif" ALIGN="absmiddle" BORDER="0"></A>&nbsp;&nbsp;&nbsp;</TD>
+	</TR></TABLE></CENTER>
+	<P>The latest version of Robin Hood can be found under the Robin Hood entry at <A HREF="http://www.bebits.com/" TARGET="_new">BeBits</A>.
+	<BR>Robin Hood requires <A HREF="http://www.bebits.com/app/323" TARGET="_new">libHTTP</A> 1.0b to run. libHTTP 1.0b is included with this distribution
+	of Robin Hood; it is also available separately with source code.</P>
+	
+	<P><FONT SIZE="+1"><B>Installing libHTTP</B></FONT>
+	<P>As long as all of the executables remain in their original directory,
+	they will be able to find libHTTP in the <I>lib</I> directory. Optionally, you
+	may move the file <I>lib/libHTTP.so</I> to "/boot/home/config/lib/." This will
+	allow the executables to be placed anywhere you wish and permits other apps to
+	use libHTTP.</P>
+	
+	<P><FONT SIZE="+1"><B>Installing the Add-On Modules</B></FONT>
+	<P>As long as the folder <I>robin_hood_modules</I> remains in the same folder as the 
+	<I>rhdaemon</I>, they will be found. Optionally, this folder may be moved to 
+	"/boot/home/config/add-ons/."</P>
+	
+	<P><FONT SIZE="+1"><B>404 Template File</B></FONT>
+	<P>The 404 Handler looks for a file named "404.html" in the root of your web directory. 
+	A sample 404.html file is provided which you can use. If you don't have a template 
+	404 file, you will get a plain "404 File Not Found" message when a file could not be 
+	found.
+	</P> 
+	
+	<P><FONT SIZE="+1"><B>File Permissions</B></FONT>
+	<P>Robin Hood respects the file permission attributes of the files in your web directory. 
+	If you find you are being asked for a password when viewing your web-site, 
+	you probably need to fix the permission attributes. Separate permissions are maintained 
+	by the file system for owner, group, and other users. Each class is further sub-divided into read, write, 
+	and execute permissions. Robin Hood will require a password for a file if others do not have 
+	read access to the file; CGIs require execute access.
+	<P>Access permissions can be changed with the "chmod" command. If you wish to make your entire web directory public, 
+	use the command:<BR>chmod -R o+r <I>path</I><BR>
+	where <I>path</I> is the path to your web directory. The CGI directory permission should be set with:<BR>
+	chmod -R o+x <I>path</I><BR>
+	where <I>path</I> is the path of the CGI directory.</P>
+	
+	<P><FONT SIZE="+1"><B>Robin Hood Executables</B></FONT>
+	<P>Robin Hood includes serveral executable components. The user interface and the server 
+	are separate. The server can continue running in the background even after the UI has 
+	exited.</P>
+	<UL>
+		<LI><FONT COLOR="#6495DE"><B>rhdaemon</B></FONT>
+		<BR>This is the Robin Hood server. It runs in the background and 
+		has no visible UI. It can be started by launching it from the tracker, the command-line, 
+		or from the Robin Hood Console. The rhdaemon can be placed anywhere you like as long 
+		as libHTTP is in the /boot/home/config/lib/ directory. If you wish to have the server start automatically on 
+		startup, add the following line to your UserBootscript:<BR>
+		<I>path</I>/rhdaemon &amp;<BR>
+		where <I>path</I> is the location of the rhdaemon on your computer.</LI>
+		<LI><FONT COLOR="#6495DE"><B>RHConsole</B></FONT>
+		<BR>This is a graphical console for RobinHood. It displays a 
+		connection log, reports on the status of the server, has controls for starting and 
+		stopping the server, and can open the Robin Hood configuration file. It includes a filter menu; this allows you to control what is 
+		displayed in the log. RHConsole does not have to be running for the server to be 
+		running.</LI>
+		<LI><FONT COLOR="#6495DE"><B>RHLog</B></FONT>
+		<BR>This is a command line console for the rhdaemon. It outputs log 
+		entries to stdout and can filter what types of entries are displayed. It should 
+		reside in the /boot/home/config/bin/ directory for convenient access. It can be 
+		made to log all server transactions to the file <I>RHLog</I> by adding the following line to 
+		your UserBootscript: rhlog >> /boot/home/config/setting/RHLog &amp;<BR>
+		It could also be used over a telnet session to monitor the web server. Type 
+		"rhlog --help" for a list of filtering options.</LI>
+	</UL>
+	
+	<FONT SIZE="+1"><B>Configuring the Virtual Hosts File</B></FONT>
+	<P>The Virtual Hosts File contains the configuration info for the rhdaemon.
+	You can open this file from the "File" menu of RHConsole or by opening
+	<A HREF="file:///boot/home/config/settings/virtual_hosts" TARGET="_new">/boot/home/config/settings/virtual_hosts</A>. This file specifies the port of each
+	server, the Webroot and Index Document associated with each Virtual Host name, and the Virtual
+	Resources and Realms of each Virtual Host. The format of the virtual hosts file 
+	has changed since the initial release of Robin Hood (version 0.9). The file has been renamed for this reason.</P>
+	<UL>
+		<LI><FONT COLOR="#6495DE"><B>Server</B></FONT>
+		<BR>An independant web server with its own collection of virtual hosts. 
+		Each server runs on its own TCP port; the default TCP port for HTTP is port 80. 
+		Other ports may be accessed by using the following syntax from your browser: <BR>
+		http://host-name:port/path<BR>
+		Example: http://www.foo-bar.org:2100/</LI>
+		<P><LI><FONT COLOR="#6495DE"><B>Virtual Host</B></FONT>
+		<BR>It is possible for one web server to service multiple 
+		domain names. For example, you may own the domains <I>www.foo-bar.org</I> and 
+		<I>www.mr-happy.com</I> and wish to host both on the same machine. Virtual Hosts 
+		provides the mechanism by which this can be done. If the host was not specified 
+		in the request or the host specified does not exist in the Virtual Hosts file, the 
+		Virtual Host named <I>Default-Host</I> is used.</LI>
+		<P><LI><FONT COLOR="#6495DE"><B>Webroot</B></FONT>
+		<BR>Each Virtual Host has its own virtual root directory. For example, 
+		if the Webroot of the Virtual Host <I>www.foo-bar.org</I> was "/boot/home/public_html/", 
+		the URL <I>http://www.foo-bar.org/foo/bar.html</I> would refer to the file 
+		"/boot/home/public_html/foo/bar.html" on your computer. It is not possible to access 
+		files outside of the virtual root directory without using a symbolic link.</LI>
+		<P><LI><FONT COLOR="#6495DE"><B>Index</B></FONT>
+		<BR>This is the Index Document to be used for each Virtual Host. It will be appended
+		to the URL before parsing if a directory URL was requested. For example, 
+		if the Webroot of the Virtual Host <I>www.foo-bar.org</I> was "/boot/home/public_html/"
+		and the Index Document was "index.shtml", the URL <I>http://www.foo-bar.org/</I> would
+		return the file "/boot/home/public_html/index.shtml" on your computer. The Index Document
+		is set to "index.html" by default if not specified.</LI>
+		<P><LI><FONT COLOR="#6495DE"><B>Virtual Resource</B></FONT>
+		<BR>Each Virtual Host maintains its own list of Virtual Resources. 
+		Virtual Resources provides the means to define resouces which don't actually exist 
+		as a file on your computer. A virtual resource is created dynamically by one of the 
+		loaded add-on modules as needed. For example, the <I>RHDirectoryHandler</I> can
+		create a directory listing when the "index.html" file is missing and it can
+		create PNG images for Tracker icons.<BR><BR>
+		Virtual Resources are also used to define Virtual MIME types. A Virtual MIME type 
+		changes the MIME type of a file for the purpose of selecting which add-on module 
+		to use. For example, all files ending in ".cgi" could be treated as CGIs instead 
+		of their native MIME types.</LI>
+		<P><LI><FONT COLOR="#6495DE"><B>Realm</B></FONT>
+		<BR>Each Virtual Host has a list of Realms associated with it.
+		When a resource is requested for which public access has not been granted, the
+		resource's Realm defines the user name and password required to access the
+		resource. Realm membership is defined by one or more file patterns. If 
+		no Realms are defined for a Virtual Host, all files belong to the Realm "Sherwood."
+		"Sherwood" has the same user name and password as set in the Network Preferences 
+		panel.</LI>
+	</UL>
+	<P><FONT SIZE="+1"><B>CGI Setup</B></FONT>
+	<P>CGIs are detected by MIME type. All files with the MIME type
+	"application/x-vnd.CGI" will be dispatched to the CGI Handler add-on module (if
+	it's installed). The default Virtual Hosts file contains a Virtual Resource
+	which will cause all files ending in .cgi and all files located within the cgi
+	-bin/ directory to be treated as CGIs. You can change this behavior if you wish
+	by editing the Virtual Hosts file.<BR>
+	You can find more information about CGIs and some sample CGIs at 
+	<A href="http://www.cgi-resources.com/" TARGET="_new">The CGI Resource Index</A>.</P>
+
+	<P><FONT SIZE="+1"><B>PHP Setup</B></FONT>
+	<P>PHP is a server-side, cross-platform, HTML embedded scripting language.
+	Much of its syntax is borrowed from C, Java and Perl with a couple of unique
+	PHP-specific features thrown in. The goal of the language is to allow web
+	developers to write dynamically generated pages quickly.
+	The default Virtual Hosts file contains a Virtual Resource which will cause
+	all files with the MIME type "application/x-httpd-php" or ending with ".php"
+	to be treated as PHP.<BR>
+	You can find more information about PHP at <A href="http://www.php.net/" TARGET="_new">PHP.net</A>.</P>
+
+	<P><FONT SIZE="+1"><B>SSI Setup</B></FONT>
+	<P>Server Side Includes provide a mechanisim for creating dynamic HTML
+	pages. A SSI file (usually ends with ".shtml") looks like a normal HTML file, but
+	contains directives to the server to inline other text elements in the document
+	from other sources. The source can be a static text document (like a HTML
+	document), another SHTML document (which will also be processed), a CGI, or a
+	shell command. SHTML documents are created on the fly by the server and the
+	client never sees the original SHTML file. Files with a MIME type of "text/x
+	-server-parsed-html" will be processed by the SSI Handler before delivery. The
+	default Virtual Hosts file contains a Virtual Resource which will cause all
+	files ending with ".shtml" be treated as SSIs.<BR>
+	See <A href="http://hoohoo.ncsa.uiuc.edu/docs/tutorials/includes.html" TARGET="_new">NCSA HTTPd Tutorial: Server Side Includes</A> for more information on using SSIs.
+	 
+	</P>
+	<HR>
+	<FONT COLOR="#FEB584">Robin Hood Web Server for BeOS</FONT><BR>
+	Copyright &#169; 1999-2001<BR>
+	The Robin Hood Development Team (see <A HREF="Revision.html">Revision History</A> for details)
+	<P><FONT COLOR="#4488FF">Be</FONT><FONT COLOR="#FF8844">OS</FONT> is a registered trademark of Be Inc.<BR><BR>
+	
+</BODY>
+</HTML>

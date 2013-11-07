@@ -1,0 +1,43 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>Robin Hood Web Server - PHP Handler</title>
+</HEAD>
+<BODY bgcolor="#14458E" text="#FFFFFF" link="#84B5FE" vlink="#84B5FE" alink="#84B5FE">
+	<CENTER><TABLE align="CENTER" border=0 width="100%" CELLSPACING="0"><TR bgcolor="#04357E">
+	<TD width="100%" height="45" ALIGN="CENTER" valign="CENTER"><font COLOR="#FFFFFF" size="+3">
+	PHP Handler <IMG SRC="RHicon.gif" ALIGN="absmiddle"></FONT></TD>
+	<TD height="45" ALIGN="RIGHT" valign="CENTER"><A HREF="../Robin%20Hood%20Docs"><IMG SRC="home.gif" ALIGN="absmiddle" BORDER="0"></A>&nbsp;&nbsp;&nbsp;</TD>
+	</TR></TABLE></CENTER>
+	<P>MIME Types: <B>application/x-httpd-php</B>
+	<P>Methods: <B>*</B>
+	<P>Priority: <B>10</B>
+	<P>Suggested Virtual Resources: 
+	<UL>
+		<LI><B><FONT COLOR="#6495DE">VRes: pattern="*.php" type="application/x-httpd-php" real=true;</FONT></B>
+		<BR>Any file ending with .php will be processed by the PHP Handler.</LI>
+	</UL>
+	Virtual Resource Extras: <B>None</B><BR>
+	<HR>
+	<P>PHP is a server-side, cross-platform, HTML embedded scripting language.
+
+	<P>You will have to install PHP separately if you want to use it. The "php" executable must reside in <A HREF="file:/boot/home/config/bin" TARGET=_new>/boot/home/config/bin</A>.
+	The PHP Handler has been tested with <A HREF="http://www.bebits.com/app/566/" TARGET="_new">PHP 4.0.4pl1</A> for BeOS
+	(a link to this page can also be found under the "Help" menu in the Robin Hood Console).
+	
+	<P>All .php files should now work without further wrappers or shebang lines, but they still have to be marked executable.
+	Robin Hood includes a few simple PHP examples (located in the "examples" subfolder of the Robin Hood directory) that can
+	be used to check if everything is set up correctly.
+	
+	<P>Visit the <A HREF="http://www.php.net/" TARGET="_new">PHP</A> web site for 
+	more information on using and writing PHP scripts, as well as links to sites
+	where you can download useful PHP scripts.<BR>
+	<HR>
+	<FONT COLOR="#FEB584">Robin Hood Web Server for BeOS</FONT><BR>
+	Copyright &#169; 1999-2001<BR>
+	The Robin Hood Development Team (see <A HREF="Revision.html">Revision History</A> for details)
+	<P><FONT COLOR="#4488FF">Be</FONT><FONT COLOR="#FF8844">OS</FONT> is a registered trademark of Be Inc.<BR><BR>
+	
+</BODY>
+</HTML>

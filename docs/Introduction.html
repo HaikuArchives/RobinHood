@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>Robin Hood Web Server - Introduction</title>
+</HEAD>
+<BODY bgcolor="#14458E" text="#FFFFFF" link="#84B5FE" vlink="#84B5FE" alink="#84B5FE">
+	<CENTER><TABLE align="CENTER" border=0 width="100%" CELLSPACING="0"><TR bgcolor="#04357E">
+	<TD width="100%" height="45" ALIGN="CENTER" valign="CENTER"><font COLOR="#FFFFFF" size="+3">
+	Introduction <IMG SRC="RHicon.gif" ALIGN="absmiddle"></FONT></TD>
+	<TD height="45" ALIGN="RIGHT" valign="CENTER"><A HREF="../Robin%20Hood%20Docs"><IMG SRC="home.gif" ALIGN="absmiddle" BORDER="0"></A>&nbsp;&nbsp;&nbsp;</TD>
+	</TR></TABLE></CENTER>
+	
+	<P>Robin Hood is a free HTTP/1.1 web server for BeOS. It is based on 
+	<A HREF="http://www.bebits.com/app/323" TARGET="_new">libHTTP</A>, which it requires to run
+	(libHTTP is included with this distribution of Robin Hood; it is also available separately with source code).
+	Robin Hood Web Server is an original work designed from the ground up for BeOS; it contains no ported code.<P>
+	<H3>Features</H3>
+	<UL>
+		<LI>Open source code, covered by the <A HREF="GPL.html">GPL</A>.</LI>
+		<LI>Compatible with both BeOS R5 networking and BONE.</LI>
+		<LI>HTTP/1.1 compliant</LI>
+		<UL>
+			<LI>HTTP/1.1 Persistant Connections.</LI>
+			<LI>Supports bytes-ranges.</LI>
+		</UL>
+		<LI>All requests are handled by dynamically loaded add-on modules. Modules are 
+		invoked by MIME type.</LI>
+		<UL>
+			<LI>File Handler - File transfer.</LI>
+			<LI>CGI Handler - Invokes CGI scripts.</LI>
+			<LI>PHP Handler - Invokes PHP scripts.</LI>
+			<LI>SSI Handler - Process Server Side Includes.</LI>
+			<LI>Directory Handler - Displays directory listings with Tracker icons.</LI>
+			<LI>Redirect Handler - Redirection of resources.</LI>
+			<LI>404 Handler - Custom "404 File Not Found" generator.</LI>
+		</UL>
+		<LI>CGI support - As specified in the CGI 1.1 Internet Draft 01.</LI>
+		<UL>
+			<LI>Supports Parsed Header Output as well as Non-Parsed Header Output.</LI>
+			<LI>Works with shell scripts, Perl, and compiled CGIs.</LI>
+			<LI>Full CGI environment variable support.</LI>
+		</UL>
+		<LI>PHP support (tested with PHP 4.0.4pl1)</LI>
+		<LI>SSI support</LI>
+		<UL>
+			<LI>Supports: config, include, echo, fsize, flastmod, and exec.</LI>
+			<LI>Full SSI environment variable support.</LI>
+			<LI>Recursive SSI support.</LI>
+		</UL>
+		<LI>Supports If-Modified-Since and If-Unmodified headers.</LI>
+		<LI>Can automatically send gzip encoded files when the request permits gzip encoding.</LI>
+		<LI>Basic Authenticaton support</LI>
+		<UL>
+			<LI>User defined Realms.</LI>
+			<LI>Uses file permissions to control access.</LI>
+		</UL>
+		<LI>Virtual Hosts support.</LI>
+		<LI>Virtual Resources.</LI>
+		<LI>Multiport capacity.</LI>
+		<LI>Separation of user interface and server.</LI>
+		<LI>SoftwareValet package for easy installation.</LI>
+	</UL>
+	<HR>
+	<FONT COLOR="#FEB584">Robin Hood Web Server for BeOS</FONT><BR>
+	Copyright &#169; 1999-2001<BR>
+	The Robin Hood Development Team (see <A HREF="Revision.html">Revision History</A> for details)
+	<P><FONT COLOR="#4488FF">Be</FONT><FONT COLOR="#FF8844">OS</FONT> is a registered trademark of Be Inc.<BR><BR>
+	
+</BODY>
+</HTML>

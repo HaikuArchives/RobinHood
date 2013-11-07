@@ -1,0 +1,57 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>Robin Hood Web Server - Introduction to Add-On Modules</title>
+</HEAD>
+<BODY bgcolor="#14458E" text="#FFFFFF" link="#84B5FE" vlink="#84B5FE" alink="#84B5FE">
+	<CENTER><TABLE align="CENTER" border=0 width="100%" CELLSPACING="0"><TR bgcolor="#04357E">
+	<TD width="100%" height="45" ALIGN="CENTER" valign="CENTER"><font COLOR="#FFFFFF" size="+3">
+	Introduction to Add-On Modules <IMG SRC="RHicon.gif" ALIGN="absmiddle"></FONT></TD>
+	<TD height="45" ALIGN="RIGHT" valign="CENTER"><A HREF="../Robin%20Hood%20Docs"><IMG SRC="home.gif" ALIGN="absmiddle" BORDER="0"></A>&nbsp;&nbsp;&nbsp;</TD>
+	</TR></TABLE></CENTER>
+	<P>All requests sent to the Robin Hood server are handled by add-on modules. The modules 
+	are invoked based on the MIME type (real or virtual) of the requested resource. New features 
+	can be added to the server by installing new or replacing existing add-on modules. The 
+	server does not even need to be restarted; the modules are dynamically loaded and unloaded 
+	when items are added to or removed from the "robin_hood_modules" folder.
+	
+	<P>The rhdaemon maintains a roster of available add-ons. All valid add-ons in the 
+	"robin_hood_modules" folder are loaded when the server starts and this folder is monitored 
+	for changes while the server is running. If a new module is moved into this folder, 
+	it will be loaded and its features will be made available immediately. When a module 
+	is removed, its features will no longer be made available to new requests and it will 
+	be unloaded as soon as all active requests are done using it. You may disable 
+	features you do not wish to make available by removing the corresponding module.
+	
+	<P>Modules run in the same memory space as the rhdaemon. If a bug in a module 
+	causes a crash, the entire server will stop. It may be possible to remove the buggy 
+	module until the bug can fixed.
+	
+	<P>When a request is received by the rhdaemon, it asks the module roster to handle the 
+	request. First the roster will check to see if the resource exists. The search will 
+	proceed from the top down. For example, if a request for "/foo/bar/foobar.html" is made, 
+	it will first check for "/foo/bar/foobar.html", if it does not exist, it will check for 
+	"foo/bar", and finally "/foo." If it finds a resource, the MIME type of the resoure is 
+	obtained. The path of the resource is then checked against the list of virtual resources 
+	with the "real" tag set to "true." If any matches are found, the resource is given the 
+	virtual MIME type defined by the virtual resource. This is used only for determining 
+	which module to invoke, it does not change the returned resource type. If the resource 
+	was not found, the path is checked against all virtual resources with the "real" tag set 
+	to "false." If no virtual resources match, the roster generates a simple "404 Not Found" 
+	message for the client. If a resource was found (real or virtual), the roster will try to find 
+	a module to handle the MIME type (real or virtual) of the resource. It will ask each 
+	module if it can handle the specified MIME type and if the module can handle it, the 
+	module returns its priority. The priority is a number which is used to 
+	determine which module to invoke when more than one module can handle the MIME type. 
+	The module with the highest priority will be chosen and invoked. If no modules can 
+	handle the request, "501 Not Implemented" is returned by the roster.<BR>
+
+	<HR>
+	<FONT COLOR="#FEB584">Robin Hood Web Server for BeOS</FONT><BR>
+	Copyright &#169; 1999-2001<BR>
+	The Robin Hood Development Team (see <A HREF="Revision.html">Revision History</A> for details)
+	<P><FONT COLOR="#4488FF">Be</FONT><FONT COLOR="#FF8844">OS</FONT> is a registered trademark of Be Inc.<BR><BR>
+	
+</BODY>
+</HTML>

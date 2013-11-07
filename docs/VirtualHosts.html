@@ -1,0 +1,146 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>Robin Hood Web Server - The Virtual Hosts File</title>
+</HEAD>
+<BODY bgcolor="#14458E" text="#FFFFFF" link="#84B5FE" vlink="#84B5FE" alink="#84B5FE">
+	<CENTER><TABLE align="CENTER" border=0 width="100%" CELLSPACING="0"><TR bgcolor="#04357E">
+	<TD width="100%" height="45" ALIGN="CENTER" valign="CENTER"><font COLOR="#FFFFFF" size="+3">
+	The Virtual Hosts File <IMG SRC="RHicon.gif" ALIGN="absmiddle"></FONT></TD>
+	<TD height="45" ALIGN="RIGHT" valign="CENTER"><A HREF="../Robin%20Hood%20Docs"><IMG SRC="home.gif" ALIGN="absmiddle" BORDER="0"></A>&nbsp;&nbsp;&nbsp;</TD>
+	</TR></TABLE></CENTER>
+	<P>The Virtual Hosts file stores the configuration info for the rhdaemon.
+	You can open this file from the "File" menu of RHConsole or by opening
+	<A HREF="file:///boot/home/config/settings/virtual_hosts" TARGET="_new">/boot/home/config/settings/virtual_hosts</A>.
+	Changes made to the Virtual Hosts file do not take effect until the server is
+	restarted. The elements defined in the Virtual Hosts file includes the
+	following: Servers, Virtual Hosts, Virtual Resources, and Realms.</P>
+	<UL>
+		<LI><FONT COLOR="#6495DE"><B>Server</B></FONT>
+		<BR>An independant web server with its own collection of virtual hosts. 
+		Each server runs on its own TCP port; the default TCP port for HTTP is port 80. 
+		Other ports may be accessed by using the following syntax from your browser: <BR>
+		http://host-name:port/path<BR>
+		Example: http://www.foo-bar.org:2100/</LI>
+		<P><LI><FONT COLOR="#6495DE"><B>Virtual Host</B></FONT>
+		<BR>It is possible for one web server to service multiple 
+		domain names. For example, you may own the domains <I>www.foo-bar.org</I> and 
+		<I>www.mr-happy.com</I> and wish to host both on the same machine. Virtual Hosts 
+		provides the mechanism by which this can be done. If the host was not specified 
+		in the request or the host specified does not exist in the Virtual Hosts file, the 
+		Virtual Host named <I>Default-Host</I> is used.</LI>
+		<P><LI><FONT COLOR="#6495DE"><B>Webroot</B></FONT>
+		<BR>Each Virtual Host has its own virtual root directory. For example, 
+		if the Webroot of the Virtual Host <I>www.foo-bar.org</I> was "/boot/home/public_html/", 
+		the URL <I>http://www.foo-bar.org/foo/bar.html</I> would refer to the file 
+		"/boot/home/public_html/foo/bar.html" on your computer. It is not possible to access 
+		files outside of the virtual root directory without using a symbolic link.</LI>
+		<P><LI><FONT COLOR="#6495DE"><B>Index</B></FONT>
+		<BR>This is the Index Document to be used for each Virtual Host. It will be appended
+		to the URL before parsing if a directory URL was requested. For example, 
+		if the Webroot of the Virtual Host <I>www.foo-bar.org</I> was "/boot/home/public_html/"
+		and the Index Document was "index.shtml", the URL <I>http://www.foo-bar.org/</I> would
+		return the file "/boot/home/public_html/index.shtml" on your computer. The Index Document
+		is set to "index.html" by default if not specified.</LI>
+		<P><LI><FONT COLOR="#6495DE"><B>Virtual Resource</B></FONT>
+		<BR>Each Virtual Host maintains its own list of Virtual Resources. 
+		Virtual Resources provides the means to define resouces which don't actually exist 
+		as a file on your computer. A virtual resource is created dynamically by one of the 
+		loaded add-on modules as needed. For example, the <I>RHDirectoryHandler</I> can
+		create a directory listing when the "index.html" file is missing and it can
+		create PNG images for Tracker icons.<BR><BR>
+		Virtual Resources are also used to define Virtual MIME types. A Virtual MIME type 
+		changes the MIME type of a file for the purpose of selecting which add-on module 
+		to use. For example, all files ending in ".cgi" could be treated as CGIs instead 
+		of their native MIME types.</LI>
+		<P><LI><FONT COLOR="#6495DE"><B>Realm</B></FONT>
+		<BR>Each Virtual Host has a list of Realms associated with it.
+		When a resource is requested for which public access has not been granted, the
+		resource's Realm defines the user name and password required to access the
+		resource. Realm membership is defined by one or more file patterns. If 
+		no Realms are defined for a Virtual Host, all files belong to the Realm "Sherwood."
+		"Sherwood" has the same user name and password as set in the Network Preferences 
+		panel.</LI>
+	</UL>
+	<P>The elements have the following type of hiearchal structure:</P>
+	<UL>
+		<LI><B>Server 1</B></LI>
+		<UL>
+			<LI><B>Virtual Host 1</B></LI>
+			<UL>
+				<LI><B>Virtual Resource 1</B></LI>
+				<LI><B>Virtual Resource 2</B></LI>
+				<LI><B>Virtual Resource 3</B></LI>
+				<LI><B>Realm 1</B></LI>
+				<LI><B>Realm 2</B></LI>
+			</UL>
+			<LI><B>Virtual Host 2</B></LI>
+			<UL>
+				<LI><B>Virtual Resource 1</B></LI>
+				<LI><B>Virtual Resource 2</B></LI>
+				<LI><B>Realm 1</B></LI>
+			</UL>
+		</UL>
+		<LI><B>Server 2</B></LI>
+		<UL>
+			<LI><B>Virtual Host 1</B></LI>
+			<UL>
+				<LI><B>Virtual Resource 1</B></LI>
+				<LI><B>Realm 1</B></LI>
+			</UL>
+		</UL>
+	</UL>
+	
+	<P>The file is composed of a series of lines with one element on each line. Lines 
+	starting with the '#' character are treated as comments and are ignored. Each line 
+	has the following format:</P>
+	<PRE>command: fieldName1=fieldValue1 fieldName2=fieldValue2 ...;</PRE>
+	<P>When Virtual Resources or Realms are searched for a match, they are searched 
+	in the same order as they appear in the virtual hosts file. Each command has a 
+	set of fields which it accepts. Virtual Resources store any undefined fields in 
+	a list of Extras, which are passed to the invoked add-on module.</P>
+	<H3>Commands</H3>
+	<UL>
+		<LI><FONT COLOR="#6495DE"><B>Server</B></FONT> - Define a new server.
+		<UL>
+			<LI><FONT COLOR="#6495DE"><B>port</B></FONT> - The TCP port on which the server is to listen.</LI>
+		</UL></LI>
+		<LI><FONT COLOR="#6495DE"><B>Host</B></FONT> - Define a new Virtual Host.<BR>
+		<UL>
+			<LI><FONT COLOR="#6495DE"><B>host</B></FONT> - The host name of the virtual host.</LI>
+			<LI><FONT COLOR="#6495DE"><B>webroot</B></FONT> - The root directory of this host; an absolute directory 
+			on your computer.</LI>
+			<LI><FONT COLOR="#6495DE"><B>index</B></FONT> - Name of the file to be used as directory index. If not defined, "index.html" will be used.</LI>
+		</UL></LI>
+		<LI><FONT COLOR="#6495DE"><B>VRes</B></FONT> - Define a new Virtual Resource.
+		<UL>
+			<LI><FONT COLOR="#6495DE"><B>pattern</B></FONT> - One or more patterns may be defined for each virtual 
+			resource. The pattern may contain the wild-card characters '*' and '?'.</LI>
+			<LI><FONT COLOR="#6495DE"><B>type</B></FONT> - The MIME type of the virtual resource.</LI>
+			<LI><FONT COLOR="#6495DE"><B>real</B></FONT> - When set to true, pattern is only matched if a real 
+			file was found. This is used to set the virtual MIME type of a resource. 
+			When set to false, the pattern is only checked if a real resource was not 
+			found. Such a resource must be created by an add-on module.</LI>
+			<LI><FONT COLOR="#6495DE"><I>extras</I></FONT> - Any field which is not one of the above is considered an 
+			extra field. Such fields are passed to the invoked add-on module and are 
+			treated in a module specific manner.</LI>
+		</UL></LI>
+		<LI><FONT COLOR="#6495DE"><B>Realm</B></FONT> - Define a new Realm.
+		<UL>
+			<LI><FONT COLOR="#6495DE"><B>name</B></FONT> - The unique name of the realm.</LI>
+			<LI><FONT COLOR="#6495DE"><B>pattern</B></FONT> - One or more patterns may be defined. If the path 
+			of a resource matches the pattern, it is considered within this realm. The 
+			pattern may contain the wild-card characters '*' and '?'.</LI>
+			<LI><FONT COLOR="#6495DE"><B>user</B></FONT> - The user name for this realm.</LI>
+			<LI><FONT COLOR="#6495DE"><B>passwd</B></FONT> - The password for this realm.</LI>
+		</UL></LI>
+	</UL>
+	<HR>
+	<FONT COLOR="#FEB584">Robin Hood Web Server for BeOS</FONT><BR>
+	Copyright &#169; 1999-2001<BR>
+	The Robin Hood Development Team (see <A HREF="Revision.html">Revision History</A> for details)
+	<P><FONT COLOR="#4488FF">Be</FONT><FONT COLOR="#FF8844">OS</FONT> is a registered trademark of Be Inc.<BR><BR>
+	
+</BODY>
+</HTML>
