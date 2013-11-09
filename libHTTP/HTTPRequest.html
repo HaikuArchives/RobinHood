@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: HTTPRequest</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>HTTPRequest</H1><BR>
+	
+	<P>Derived from: <B>HTTPMessage</B><BR><BR>
+	Declared in: <B>HTTPMessage.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	<P>This HTTPMessage derived object implements HTTP request-message specific 
+	aspects.</P>
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3></H3><BR>
+	<PRE>
+	HTTPRequest( void )</PRE>
+	<P>Calls HTTPMessage() and setup any request-message specific attributes.</P>
+	<HR>
+	
+	<H3>~HTTPRequest()</H3><BR>
+	<PRE>
+	virtual ~HTTPRequest( void )</PRE>
+	<P>Deletes the object along with any internally allocated objects like message-headers.</P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>SetRequestLine()</H3><BR>
+	<PRE>
+	void SetRequestLine( const char *requestLine )
+	void SetRequestLine( const char *method, const char *uri )
+	void SetRequestLine( http_method method, brokenURI *uri )</PRE>
+	<P>Set the request-line of the message. The first form accepts a full request-line 
+	of the form: method SP URI [SP http-version]. The second form accepts a <I>
+	method</I> and <I>uri</i> string and creates the request-line for you. The final 
+	form accepts a http_request type and a brokenURI. It constructs the request-line 
+	for your from the arguments you provided.</P>
+	<P>All versions interpret the request line by setting the method and version attributes.</P>
+	<HR>
+	
+	<H3>GetRequestLine()</H3><BR>
+	<PRE>
+	const char *GetRequestLine( void )
+	void GetRequestLine( char *method, char *uri, char *version )</PRE>
+	<P>Returns HTTPMessage::GetStartLine().</P>
+	<HR>
+	
+	<H3>GetMethod()</H3><BR>
+	<PRE>
+	http_method GetMethod( void )</PRE>
+	<P>Returns the method of the request.</P>
+	<HR>
+	
+	<H3>ParseURI()</H3><BR>
+	<PRE>
+	void ParseURI( brokenURI *uri )</PRE>
+	<P>Parses the URI in the request-line and outputs its components to <I>uri</I>. 
+	See parse_URI() in the Functions section of this documentation.</P>
+	<HR>
+	
+	<H3>SetReplyIO(), GetReplyIO()</H3><BR>
+	<PRE>
+	void SetReplyIO( BDataIO *replyIO )
+	BDataIO *GetReplyIO( void )</PRE>
+	<P>Sets and gets the BDataIO object used for transport when SendReply() is called.</P>
+	<HR>
+	
+	<H3>SetPort(), GetPort()</H3><BR>
+	<PRE>
+	void SetPort( unsigned short port )
+	unsigned short GetPort( void )</PRE>
+	<P>Set and get the TCP port on which this message was received. They are 
+	for informational use only and do not have any effect on the message. They 
+	are provided for use with CGIs, which like to know the port which was used.</P>
+	<HR>
+	
+	<H3>SetRemoteHost(), GetRemoteHost()</H3><BR>
+	<PRE>
+	void SetRemoteHost( const char *remoteHost )
+	const char *GetRemoteHost( void )</PRE>
+	<P>Set and get the remote host name of the machine responsible for the request. 
+	They are for informational use only and do not have any effect on the message. They 
+	are provided for use with CGIs, which like to know the remote host name.</P>
+	<HR>
+	
+	<H3>ReceiveMessage()</H3><BR>
+	<PRE>
+	virtual int32 ReceiveMessage( BDataIO *io )</PRE>
+	<P>Implements the pure vitual method HTTPMessage::ReceiveMessage(). See 
+	HTTPMessage::ReceiveMessage() for more information.</P>
+	<HR>
+	
+	<H3>SendReply()</H3><BR>
+	<PRE>
+	virtual int32 SendReply( HTTPResponse *response )</PRE>
+	<P>Send a response back to network entity which initiated this request.
+	Calls response->SendMessage( GetReplyIO(), simple ), where simple is set to true 
+	when this request is a simple request.</P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

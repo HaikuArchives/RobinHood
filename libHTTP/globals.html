@@ -1,0 +1,115 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: </title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>Global Variables, Constants, and Defined Types</H1><BR>
+	<P></P>
+	<HR>
+	<H2>Global Variables</H2><HR>
+	
+	<P><B>dns_resolver</B><BR><BR>
+	Declared in: <B>DNSResolver.h</B></P>
+	<PRE>
+	DNSResolver dns_resolver</PRE>
+	<P></P>
+	
+	<P><B>brTimeLock</B><BR><BR>
+	Declared in: <B>HTTPUtils.h</B></P>
+	<PRE>
+	BLocker brTimeLock</PRE>
+	<P></P>
+	
+	<HR><H2>Constants</H2><HR>
+	
+	<H3>HTTP Methods</H3>
+	<P>Declared in: <B>HTTPUtils.h</B></P>
+	
+	<TABLE border="1">
+		<TR><TD><CENTER><B>enum http_method</B></CENTER></TD></TR>
+		<TR><TD>METHOD_POST</TD></TR>
+		<TR><TD>METHOD_GET</TD></TR>
+		<TR><TD>METHOD_HEAD</TD></TR>
+		<TR><TD>METHOD_OPTIONS</TD></TR>
+		<TR><TD>METHOD_PUT</TD></TR>
+		<TR><TD>METHOD_DELETE</TD></TR>
+		<TR><TD>METHOD_TRACE</TD></TR>
+		<TR><TD>METHOD_UNKNOWN</TD></TR>
+	</TABLE>
+	<BR><BR>
+	<TABLE border="1">
+		<TR><TD><CENTER><B>enum URI_Type</B></CENTER></TD></TR>
+		<TR><TD>absolueURI</TD></TR>
+		<TR><TD>relativeURI</TD></TR>
+	</TABLE>
+	<BR><BR>
+	<TABLE border="1">
+		<TR><TD><CENTER><B>enum Path_Type</B></CENTER></TD></TR>
+		<TR><TD>abs_path</TD></TR>
+		<TR><TD>rel_path</TD></TR>
+		<TR><TD>empty_path</TD></TR>
+	</TABLE>
+	
+	<HR>
+	<H3>HTTP Header Strings</H3>
+	<P>Declared in: <B>HTTPUtils.h</B></P>
+	
+	<TABLE border="1">
+		<TR><TD><CENTER><B>const char *name</B></CENTER></TD><TD><CENTER><B>Value</B></CENTER></TD></TR>
+		<TR><TD>kHEAD_ALLOW</TD><TD>Allow<TD></TR>
+		<TR><TD>kHEAD_AUTHORIZATION</TD><TD>Authorization<TD></TR>
+		<TR><TD>kHEAD_ENCODING</TD><TD>Content-Encoding<TD></TR>
+		<TR><TD>kHEAD_ACCEPT_ENCODING</TD><TD>Accept-Encoding<TD></TR>
+		<TR><TD>kHEAD_CONNECTION</TD><TD>Connection<TD></TR>
+		<TR><TD>kHEAD_LENGTH</TD><TD>Content-Length<TD></TR>
+		<TR><TD>kHEAD_TYPE</TD><TD>Content-Type<TD></TR>
+		<TR><TD>kHEAD_DATE</TD><TD>Date<TD></TR>
+		<TR><TD>kHEAD_EXPIRES</TD><TD>Expires<TD></TR>
+		<TR><TD>kHEAD_FROM</TD><TD>From<TD></TR>
+		<TR><TD>kHEAD_IF_MODIFIED</TD><TD>If-Modified-Since<TD></TR>
+		<TR><TD>kHEAD_IF_UNMODIFIED</TD><TD>If-Unmodified-Since<TD></TR>
+		<TR><TD>kHEAD_LAST_MODIFIED</TD><TD>Last-Modified<TD></TR>
+		<TR><TD>kHEAD_LOCATION</TD><TD>Location<TD></TR>
+		<TR><TD>kHEAD_PRAGMA</TD><TD>Pragma<TD></TR>
+		<TR><TD>kHEAD_REFRESHER</TD><TD>Refresher<TD></TR>
+		<TR><TD>kHEAD_SERVER</TD><TD>Server<TD></TR>
+		<TR><TD>kHEAD_HOST</TD><TD>Host<TD></TR>
+		<TR><TD>kHEAD_AGENT</TD><TD>User-Agent<TD></TR>
+		<TR><TD>kHEAD_AUTHENTICATE</TD><TD>WWW-Authenticate<TD></TR>
+		<TR><TD>kHEAD_CONTENT_RANGE</TD><TD>Range<TD></TR>
+		<TR><TD>kHEAD_RANGE</TD><TD>Content-Range<TD></TR>
+		<TR><TD>kCRLF</TD><TD>\r\n<TD></TR>
+		<TR><TD>kHTTP_DATE</TD><TD>%a, %d %b %Y %H:%M:%S GMT<TD></TR>
+	</TABLE>
+	
+	<HR><H2>Defined Types</H2><HR>
+	
+	<P><B>brokenURI</B><BR><BR>
+	Declared in: <B>HTTPUtils.h</B></P>
+	<PRE>
+	struct brokenURI
+	{
+		URI_Type 	URIType;
+		
+		char		scheme[16];
+		char		host[64];
+		char		port[8];
+		
+		Path_Type	PathType;
+		
+		char		path[2048];
+		char		params[2048];
+		char		query[2048];
+	};</PRE>
+	<P></P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

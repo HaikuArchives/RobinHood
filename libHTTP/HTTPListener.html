@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: HTTPListener</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>HTTPListener</H1><BR>
+	
+	<P>Derived from: <B>TCP_Listener</B><BR><BR>
+	Declared in: <B>HTTPListener.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	<P>The HTTPListener class is analogeous to the BLooper class. It waits to
+	receive messages in its own thread over TCP and passes them to a HTTPHandler
+	object by means of the handler's MessageReceived() method. It differs from the
+	BLooper/BHandler model in certain aspects. When a connection is opened, a new
+	handler thread is created and a copy of the template handler is created to
+	handle requests on that connection. The listener returns immediatly to wait
+	for new connections, while the handler thread processes the request messages.</P>
+	
+	<P>The connection thread manages the connection, receives requests on that connection, 
+	and passes properly formatted requests to the handler via MessageReceived(). 
+	The connection thread implements HTTP/1.1 persistant connections; it can receive 
+	multiple requests over the same TCP conneciton.</P>
+	<P>The handler is responsible for sending any reply that may be required.</P>
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>HTTPListener()</H3><BR>
+	<PRE>
+	HTTPListener( HTTPHandler *handler, unsigned short port = 80, int acceptance_count = 32 )</PRE>
+	<P>Creates and initializes a HTTPListener object. The <I>hander</I> is a template 
+	handler. Ownership of the template handler is retained by the caller and it must 
+	not be deleted while the listener is running. The template is not actually used to handle the requests. 
+	The template's NewCopy() method is called when the listener needs another 
+	hander to process a connection.</P>
+	<P>The <I>port</I> argument is the TCP port number on the HTTPListener will listen. 
+	The defualt port for HTTP is port 80. The <I>acceptance_count</I> is the number 
+	of TCP connections the listener is willing to accept at a time. Connections are 
+	refused when the the number of active connections reaches the <I>acceptance_count</I>.</P>
+	<HR>
+	
+	<H3>~HTTPListener()</H3><BR>
+	<PRE>
+	virtual ~HTTPListener( void )</PRE>
+	<P></P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>Run()</H3><BR>
+	<PRE>
+	virtual thread_id Run( void )</PRE>
+	<P>Starts the listener thread.</P>
+	<HR>
+	
+	<H3>Quit()</H3><BR>
+	<PRE>
+	virtual void Quit( void )</PRE>
+	<P>Stops the listener thread.</P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

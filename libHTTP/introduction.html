@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: Introduction</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>libHTTP 0.9</H1>
+	<BR>
+	<P>libHTTP is free object-based shared library for BeOS which implements the
+	Hyper Text Transfer Protocol (HTTP) version 1.1. HTTP is the protocol used by
+	the WWW to transfer documents. In additon to providing a high level HTTP
+	interface, libHTTP provides a collection of objects for communicating via the
+	TCP and UDP protocols as well as a number of usefull supporting objects and
+	functions. It is an original work designed from the ground-up for BeOS; it
+	contains no ported code. </P>
+	
+	<P>This is the initial release of this library. I do not consider it
+	complete at this time; it may contain serious bugs and some features are
+	incomplete. You may also find portions of this documentatin to be incomplete. It has
+	been released under the terms of the <A href="lgpl.html">GNU Library General
+	Public License</A>. This differs from the standard GPL by allowing certain
+	propriatary software to link with this library without violating the license.
+	Please help the effort to make this library more usefull by submitting
+	sugestions, bug reports/fixes, and any other support you may wish to offer.</P>
+	<BR>
+	<H3>High-Level HTTP Client Interface</H3>
+	<P>If you are writing an HTTP client, you may find the HTTP_Io class meets
+	your needs. This class is modeled after the BFile class. It is a BPositionIO
+	derived object which can manipulate the URL resource specified by its SetTo()
+	method. Seeking will work, provided the remote server supports byte-ranges.
+	Currently it is a read-only object; write support will be added in a future
+	release of this library. This object supports HTTP/1.1 persistant
+	connections.</P>
+	
+	<H3>General HTTP Interface</H3>
+	<P>This interface is used if you are writing a server or a client which
+	needs more control than the HTTP_Io class provides. This interface is some-what
+	modeled after the BeOS Messaging System ( No, the HTTP objects are not derived
+	from BLooper, BMessage, BHandler, etc. ). HTTP Messages are represented and
+	mainipulated by the HTTPMessage derived objects: HTTPRequest and HTTPResponse.
+	The HTTPMessage objects do not assume any specific transport mechanism (like
+	TCP) and can read from and write to any BDataIO derived object. A program which
+	wishes to receive HTTPMessages over a TCP interface may use the HTTPListener and
+	HTTPHandler objects, which are analogous to BLooper and BHandler respectively. A
+	HTTPListener object listens on its specified TCP port for HTTP requests and
+	passes them to a copy of its designted HTTPHandler by calling the handler's
+	MessageReceived() method. This process differs a bit from the BeOS Messaging
+	Model. Where a BHandler is called in the same thread as its BLooper, each
+	HTTPHandler object runs in its own thread and is a copy of the template handler
+	object provided to the listener. This permits the HTTPListener to handle
+	multiple requests simultaneously. In addition to invoking the
+	HTTPHandler::MessageReceived() method, the thread created by the listener for
+	the handler is responsible for managing the TCP connection. If the client is
+	using HTTP/1.1, multiple requests may be received over the same TCP
+	connection.</P>
+	
+	<P>A sample HTTPHandler derived class is provided. This is the
+	HTTPFileServer class. This class implements a simple file server and serves as
+	the basis for Robin Hood; a free web server based on libHTTP.</P>
+	
+	<H3>TCP/IP Interface</H3>
+	<P>The Socket_Io derived classes, TCP_IO and UDP_IO, provide BDataIO based
+	wrappers for the BSD sockets interface. They were created to allow HTTPMessage
+	objects, which only perform IO on BDataIO derived objects, to communicate over
+	TCP. I believe they provide a cleaner, more Be-like interface to the TCP/IP
+	protocol stack than the BSD sockets interface. You may find them usefull for
+	protocols other than HTTP.</P>
+	
+	<H3>DataIO Utilities</H3>
+	A number of BDataIO derived classes and other related utilities are provided by 
+	this library.</P>
+	<P>The FileIO and DesIO classes provide BDataIO wrappers for streams 
+	and file descripters. This is handy for allowing HTTPMessages to talk to pipes and 
+	other descripter based io entities.</P>
+	<P>The class DataIOPump can provide buffered data transfers between any 
+	two BDataIO derived objects.</P>
+	<P>The BufferedIO class is a wrapper for other BDataIO objects. It provides 
+	buffered writes. This may be usefull when many small writes are made to a TCP_IO 
+	object.</P>
+	<P>The functions io_printf() and io_getline() are usefull for formatted output 
+	and line-based input on BDataIO derived objects.
+	
+	<H3>More Info on HTTP</H3>
+	<P>HTTP is the primary protocol used by the World Wide Web. It is superior
+	to FTP for many applications. HTTP not only has provisions for retrieval of data
+	entities, it can also modify them, much like FTP. ( Yes, you can actually upload
+	files via HTTP. ) Unlike FTP, it can specify the underlying data-type of the
+	entity via mime types. It can also provide a powerfull interface to remote
+	databases by means of its query mechanisim.</P>
+	<P>HTTP is a quasi-datagram based messaging protocol. It is usually
+	implemented on top of a stream based protocol such as TCP, but could use other
+	protocols for transport. HTTP communicates by means of messages; allmost
+	datagram like entities. Each message consists of a start-line followed by a
+	variable number of headers and an optional variable-length entity-body. HTTP
+	messages can be sub-divided into requests and responses. A HTTP transaction
+	consists a request being sent to a recipient and the recipient sending a
+	response back to the requesting entity.</P>
+	<P>A request message's start-line is known as the request-line. It consists 
+	of a Method token, a URI, and the HTTP version being used. The most common 
+	Method is "GET"; it requests the entity specified by the URI be returned in 
+	the response. Other Methods include: HEAD, POST, PUT, DELETE, and TRACE.</P>
+	<P>The start-line of a response is know as the status-line. It contains the 
+	HTTP version supported, a status-code, and a human readable reason phrase. In 
+	response to a "GET" request, the requested resource is typically returned in 
+	the entity-body portion of the response.</P>
+	<P>HTTP can be used for more than file transfers on the Web. It can be used as 
+	a general purpose remote messaging protocol between programs. You could even 
+	transport BMessages via HTTP.</P>
+	<P>For the definitive HTTP/1.1 protocol specification, see RFC 2068. RFC 1945 
+	specifies the earlier HTTP/1.0 protocol and may be better suited as an 
+	introduction to HTTP.
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR><BR>
+	BeOS is a registered trademark of Be Inc.
+	<BR><BR>
+	This library is free software; you can redistribute it and/or 
+	modify it under the terms of the GNU Library General Public 
+	License as published by the Free Software Foundation; either 
+	version 2 of the License, or (at your option) any later version. 
+	<BR><BR>
+	This library is distributed in the hope that it will be useful, 
+	but WITHOUT ANY WARRANTY; without even the implied warranty of 
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU 
+	Library General Public License for more details. 
+	<BR><BR>
+	You should have received a copy of the GNU Library General Public 
+	License along with this library; if not, write to the 
+	Free Software Foundation, Inc., 59 Temple Place - Suite 330, 
+	Boston, MA  02111-1307, USA.
+	<BR><BR>
+	Contact Info:<BR>
+	Author: Joe Kloss<BR>
+	E-mail: axly@deltanet.com<BR>
+	Postal Address: 25002 Ravenswood, Lake Forest, CA 92630, USA</P>
+	
+</BODY>
+</HTML>

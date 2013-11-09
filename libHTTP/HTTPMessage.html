@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: HTTPMessage</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>HTTPMessage</H1><BR>
+	
+	<P>Derived from: <B>none</B><BR><BR>
+	Declared in: <B>HTTPMessage.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	<P>HTTPMessage is an abstract class for representing and manipulating HTTP 
+	messages. It implements functionality common to both reqests and responses.</P>
+	<P>HTTP messages consist of a start-line followed by a variable number of 
+	headers and an optional variable length entity-body.</P>
+	<P>The HTTPMessage class does not assume any specific transport mechanism 
+	for the messages it represents. HTTPMessage objects know how to receive and send HTTP messages 
+	trough a BDataIO derived objects. All io is performed through the supplied BDataIO 
+	derived objects. As such, you can send and receive messages to and from any BDataIO derived 
+	object such as a TCP_IO or a BFile.</P>
+	<P>All message headers are stored internally and can be searched. Any 
+	entity-body is represented by a BDataIO object and does not have reside in memory; 
+	it can be read as needed.</P>
+	<P></P>
+	
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>HTTPMessage()</H3><BR>
+	<PRE>
+	HTTPMessage( void )</PRE>
+	<P>The default constructor calls InitMessage() and creates a new HTTPMessage 
+	object.</P>
+	<HR>
+	
+	<H3>~HTTPMessage()</H3><BR>
+	<PRE>
+	virtual ~HTTPMessage( void )</PRE>
+	<P>The destructor frees all internally allocated storage used by the object, 
+	including headers, and deletes the object.</P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>InitMessage()</H3><BR>
+	<PRE>
+	virtual void InitMessage( void )</PRE>
+	<P>Setup the message for use or reuse. The start-line is set to a 
+	NULL string, content-length is set to 0, the body set to NULL, and any 
+	existing headers are removed.</P>
+	<HR>
+	
+	<H3>SetStartLine(), GetStartLine()</H3><BR>
+	<PRE>
+	void SetStartLine( const char *start_line )
+	const char *GetStartLine( void )</PRE>
+	<P>SetStartLine copies <I>start_line</I> to the the messages's internal 
+	storage for the start-line. The derived classes SetRequestLine() and 
+	SetStatusLine() methods are preferable to SetStartLine() because they interpret 
+	the line in the context of its message-type and can automatically set 
+	message-type specific attributes.</P>
+	<P>GetStartLine() returns a pointer the internally stored start-line.</P>
+	<HR>
+	
+	<H3>SetVersion(), GetVersion()</H3><BR>
+	<PRE>
+	void SetVersion( const char *version )
+	const char *GetVersion( void )</PRE>
+	<P>Gets and sets the HTTP version attribute of the message. The default 
+	version is "HTTP/1.1." </P>
+	<HR>
+	
+	<H3>AddHeader()</H3><BR>
+	<PRE>
+	void AddHeader( const char *header )
+	void AddHeader( const char *fieldName, const char *fieldValue )</PRE>
+	<P>Adds a header to the message's header list. The first flavor accepts a 
+	full HTTP message-header of the form: field-name ":" [field-value]. The second 
+	flavor takes the field-name and field-value as arguments and creates the 
+	message-header for you.</P>
+	<HR>
+	
+	<H3>RemoveHeader(), RemoveHeaderByName()</H3><BR>
+	<PRE>
+	bool RemoveHeader( char *headerPtr )
+	bool RemoveHeaderByName( const char *fieldName )</PRE>
+	<P>Remove a message header. The RemoveHeader() removes the header pointed to by 
+	<I>headerPtr</I> while RemoveHeaderByName() removes the first header with 
+	the given field-name. They return true if success and false if the header was not 
+	found.</P>
+	<HR>
+	
+	<H3>FindHeader()</H3><BR>
+	<PRE>
+	const char *FindHeader( const char *fieldName, char *fieldValue=NULL, size_t n=0 )</PRE>
+	<P>Find a header by field-name. If a header with a field-name of <I>fieldName</I> 
+	is found, its field value is copied to <I>fieldValue</I>. <I>n</I> specifies 
+	the size of the buffer provided to <I>fieldValue</I>. FindHeader() returns 
+	a pointer to to the full message-header if found and NULL if it was not found.</P>
+	<HR>
+	
+	<H3>HeaderAt()</H3><BR>
+	<PRE>
+	const char *HeaderAt( int32 index )</PRE>
+	<P>Returns a pointer to the full message-header at the specified index if index 
+	is in range; it returns NULL if it's not in range. Indicies start at 0 and go to CountHeaders()-1.</P>
+	<HR>
+	
+	<H3>CountHeaders()</H3><BR>
+	<PRE>
+	int32 CountHeaders( void )</PRE>
+	<P>Returns the total number of message-headers in the message.</P>
+	<HR>
+	
+	<H3>FreeHeaders()</H3><BR>
+	<PRE>
+	void FreeHeaders( void )</PRE>
+	<P>Removes all message headers.</P>
+	<HR>
+	
+	<H3>SetContentLength(), GetContentLength()</H3><BR>
+	<PRE>
+	void SetContentLength( int64 length )
+	int64 GetContentLength( void )</PRE>
+	<P>Get and set the content-length attribute of the message. The content
+	-length attribute specifies the length of the entity-body. A HTTP message is not
+	required to specify its length and this attribute is used for informational
+	purposes only. When SendBody() is called and a message-length is not specified,
+	the message-length is normally signalled by closure of the connection. If a message
+	length is provided, no more than message-length bytes should be received or sent
+	as part of the entity-body.</P>
+	<HR>
+	
+	<H3>SetMessageBody(), GetMessageBody()</H3><BR>
+	<PRE>
+	void SetMessageBody( BDataIO *body )
+	BDataIO *GetMessageBody( void )</PRE>
+	<P>Get and set the entity-body BDataIO object. A NULL body specifies no 
+	entity-body.</P>
+	<HR>
+	
+	<H3>DeleteMessageBody()</H3><BR>
+	<PRE>
+	status_t DeleteMessageBody( void )</PRE>
+	<P>Delete the BDataIO object which represents the message body. This should 
+	not be called on a statically allocated body object.</P>
+	<HR>
+	
+	<H3>SetBodyBuffering()</H3><BR>
+	<PRE>
+	void SetBodyBuffering( bool buffered )</PRE>
+	<P>SendBody() transmits the body in non-buffered mode by default. This works 
+	fine when reading from objects like BFiles. If the body is dynamically 
+	generated, such as a CGI, setting this to true will improve network performance.</P>
+	<HR>
+	
+	<H3>SendMessage()</H3><BR>
+	<PRE>
+	virtual int32 SendMessage( BDataIO *io, bool simple = false )</PRE>
+	<P>Send the message using <I>io</I> for transport. If <I>simple</I> is 
+	true, a simpe HTTP message is sent. A simple request contains only a 
+	request-line without the HTTP version ( no headers are sent ) and a simple response contains only 
+	the entity-body ( no reponse-line or headers ). Simple messages are used by 
+	pre-HTTP/1.0 clients and servers. Returns number of bytes sent in the 
+	entity-body or -1 if an error occured.</P>
+	<HR>
+	
+	<H3>ReceiveMessage()</H3><BR>
+	<PRE>
+	virtual int32 ReceiveMessage( BDataIO *io ) = 0</PRE>
+	<P>This pure-virtual method should initalize the message by reading it from <I>io</I>. This will setup the 
+	start-line, load any HTTP message-headers and set the entity-body to <I>io</I>. 
+	It may also interpret the start-line and setup other message attributes. 
+	Returns the number of bytes read or -1 if an error occured.</P>
+	
+	<HR>
+	
+	<H3>SendHeaders()</H3><BR>
+	<PRE>
+	virtual int32 SendHeaders( BDataIO *io, bool simple = false )</PRE>
+	<P>Write the start-line and message-headers stored in the HTTPMessage object to the BDataIO 
+	specified by <I>io</I>. Returns the number of bytes sent or -1 if an error occured.</P>
+	<HR>
+	
+	<H3>SendBody()</H3><BR>
+	<PRE>
+	virtual int32 SendBody( BDataIO *io )</PRE>
+	<P>If the entity-body is not NULL, up to content-length bytes are moved 
+	from the entity-body to <I>io</I>. If no content-length is specified, 
+	SendBody() moves data until the EOF is reached. The return value is the number 
+	of bytes actually sent or -1 if an error occured.</P>
+	<HR>
+	
+	<H3>ReceiveStartLine()</H3><BR>
+	<PRE>
+	virtual int32 ReceiveStartLine( BDataIO *io )</PRE>
+	<P>Set the start-line by reading it from <I>io</I>. Returns the number of 
+	bytes read from <I>io</I> or -1 if an error occured.</P>
+	<HR>
+	
+	<H3>ReceiveHeaders()</H3><BR>
+	<PRE>
+	virtual int32 ReceiveHeaders( BDataIO *io )</PRE>
+	<P>Add message-headers by reading them from <I>io</I>. Returns the number of 
+	bytes read or -1 if an error occured.</P>
+	<HR>
+	
+	<H3>ReceiveBody()</H3><BR>
+	<PRE>
+	virtual int32 ReceiveBody( BDataIO *io )</PRE>
+	<P>The default implementation just calls SetMessageBody( io ) and returns 0.</P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

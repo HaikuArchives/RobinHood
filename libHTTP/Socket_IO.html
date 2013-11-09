@@ -1,0 +1,125 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: Socket_IO</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>Socket_IO</H1><BR>
+	
+	<P>Derived from: <B>BDataIO</B><BR><BR>
+	Declared in: <B>TCP_IO.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	<P>The Socket_IO class provides a BDataIO based wrapper for the BSD 
+	sockets interface. See the Network Kit documentation for information on 
+	the BSD sockets interface.</P>
+	<P>See TCP_IO and TCP_Listener for use with TCP.</P>
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>Socket_IO()</H3><BR>
+	<PRE>
+	Socket_IO( int socket )</PRE>
+	<P>Create a new Socket_Io and wrap the socket specified by <I>socket</I>.</P>
+	<HR>
+	
+	<H3>~Socket_IO()</H3><BR>
+	<PRE>
+	virtual ~Socket_IO( void )</PRE>
+	<P>Delete this object. If close-on-delete is enabled, the socket passed 
+	to the constructor is closed. close-on-delete is false by default.</P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>Read()</H3><BR>
+	<PRE>
+	virtual ssize_t Read( void *buffer, size_t numBytes )</PRE>
+	<P>Read from the socket.</P>
+	<HR>
+	
+	<H3>Write()</H3><BR>
+	<PRE>
+	virtual ssize_t Write( const void *buffer, size_t numBytes )</PRE>
+	<P>Write to the socket.</P>
+	<HR>
+	
+	<H3>Connect()</H3><BR>
+	<PRE>
+	status_t Connect( const char *IPname, unsigned short port )
+	int Connect( const struct sockaddr_in *remote_interface )</PRE>
+	<P>Connect to the host specified by <I>IPname</I> on <I>port</I>. 
+	<I>IPname can be either a host name or an IP address.</I></P>
+	<P>The second format is more of the conventinal BSD sockets flavor.</P>
+	<HR>
+	
+	<H3>Bind()</H3><BR>
+	<PRE>
+	int Bind( unsigned short port, int32 address = INADDR_ANY )</PRE>
+	<P>Bind to <I>port</I> on the interface specified by <I>address</I>. 
+	The defualt argument of <I>address</I>, INADDR_ANY, tells Bind() to 
+	bind to all interfaces. Despite what it says in the BeBook, 
+	INADDR_ANY appears to work.</P>
+	<HR>
+	
+	<H3>Listen()</H3><BR>
+	<PRE>
+	int Listen( int acceptance_count )</PRE>
+	<P>Listen() enables the socket to receive connections. The 
+	<I>acceptance_count</I> is the length of the acceptance queue. This is the 
+	maximum number of requests which can be waiting to be accepted. When the 
+	acceptance queue is full, further attempts to connect will fail.
+	It is not the maximum number of simultaneous connections which can be 
+	handled. As soon a Accept() is called, a space is freed in the queue. This number 
+	need not be very high if accepted connections are passed to their own thread 
+	and the listener returns to calling Accept() immediately.
+	</P>
+	<HR>
+	
+	<H3>Accept()</H3><BR>
+	<PRE>
+	int Accept( struct sockaddr *client_interface, int *client_size )</PRE>
+	<P>If blocking is enabled for this socket, Accept blocks until a client 
+	attempts to connect. It then returns a new socket token for the accepted 
+	connection and can go back to accepting connections. <I>client_interface</I> 
+	returns information on the remote client.</P>
+	<HR>
+	
+	<H3>Close()</H3><BR>
+	<PRE>
+	int Close( void )</PRE>
+	<P>Close the connection.</P>
+	<HR>
+	
+	<H3>SetCOD()</H3><BR>
+	<PRE>
+	void SetCOD( bool flag )</PRE>
+	<P>This controls the close-on-delete function. If set to true, the socket 
+	will be closed when the object is deleted. By default it is set to false.</P>
+	<HR>
+	
+	<H3>SetBlocking()</H3><BR>
+	<PRE>
+	void SetBlocking( bool shouldBlock )</PRE>
+	<P>Setting this to true will cause io to block. Setting it to false will set 
+	io to non-blocking mode. Io blocks by default.</P>
+	<HR>
+	
+	<H3>GetSocket()</H3><BR>
+	<PRE>int GetSocket( void )</PRE>
+	<P>Returns the socket token used by this object.</P>
+	<HR>
+	
+	<H3>GetPeerName()</H3><BR>
+	<PRE>
+	const char *GetPeerName( void )</PRE>
+	<P>Returns the IP name of the remote interface.</P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

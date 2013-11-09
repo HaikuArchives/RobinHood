@@ -1,0 +1,51 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: TCP_IO</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>TCP_IO</H1><BR>
+	
+	<P>Derived from: <B>Socket_IO</B><BR><BR>
+	Declared in: <B>TCP_IO.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	<P>The TCP_IO class implements an interface to TCP. TCP (Transmission
+	Control Protocol) is a connection-oriented, stream based protocol which provides
+	a full-duplex virtual circuit. It provides an error correcting transport
+	mechanism, ensures first-in-first-out ordering of trasmitted data, and provides
+	transport-user addressing via 16-bin port numbers. TCP is implemented on top of
+	IP ( Internet Protocol ); a connectionless, datagram based, best delivery effort
+	protocol.</P>
+	
+	<P></P>
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>TCP_IO()</H3><BR>
+	<PRE>
+	TCP_IO( void )
+	TCP_IO( int socket )</PRE>
+	<P>The first constructor creates a socket for you and sets close-on-delete to 
+	true. The second constructor takes an existing socket as an argument and 
+	close-on-delete is set to false by default.</P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>Accept()</H3><BR>
+	<PRE>
+	int Accept( void )
+	int Accept( struct sockaddr_in *client_interface )</PRE>
+	<P>Two new flavors of Accept(). The first is used if you don't care about 
+	the remote interface and the second is like the one provided by Socket_Io, but 
+	without the need for a size argument.</P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

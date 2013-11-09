@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: ThreadCaffeine</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>ThreadCaffeine</H1><BR>
+	
+	<P>Derived from: <B>none</B><BR><BR>
+	Declared in: <B>ThreadCaffeine.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	<P>The ThreadCaffeine class can be used to wakeup a thread which has 
+	been blocking too long. I created it because the Network Kit is still 
+	buggy and can block indefinetly on io requests. Especially if the remote 
+	closes the connection in the middle of an io task. While this wakes up 
+	the threads which employ the ThreadCaffeine, allowing them to calls 
+	closesocket() and exit gracefully, often the threads in the Net Server 
+	still don't wakeup and after calling closesocket(). This leads to 
+	a buildup of zombie threads in the Net Server and can eventually lead to 
+	the death of the Net Server. Hopefully all of this will be fixed soon. Right?
+	Then we will no longer need lame hacks like ThreadCaffeine.
+	</P>
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>ThreadCaffeine()</H3><BR>
+	<PRE>
+	ThreadCaffeine( bigtime_t sleep = 10000000 )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>~ThreadCaffeine()</H3><BR>
+	<PRE>
+	virtual ~ThreadCaffeine( void )</PRE>
+	<P></P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>SetTeam()</H3><BR>
+	<PRE>
+	status_t SetTeam( team_id team )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>Run()</H3><BR>
+	<PRE>
+	thread_id Run( void )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>Quit()</H3><BR>
+	<PRE>
+	status_t Quit( void )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>AddThread()</H3><BR>
+	<PRE>
+	status_t AddThread( const char *thread_name )
+	status_t AddThread( thread_id thread, bigtime_t timeout )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>RemoveThread()</H3><BR>
+	<PRE>
+	status_t RemoveThread( thread_id thread )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>WaitForThreads()</H3><BR>
+	<PRE>
+	void WaitForThreads( bool wake )</PRE>
+	<P></P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

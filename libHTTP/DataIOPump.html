@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: DataIOPump</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>DataIOPump</H1><BR>
+	
+	<P>Derived from: <B>none</B><BR><BR>
+	Declared in: <B>DataIOPump.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>DataIOPump()</H3><BR>
+	<PRE>
+	DataIOPump( size_t bufferSize = 4096 )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>~DataIOPump()</H3><BR>
+	<PRE>
+	virtual ~DataIOPump( void )</PRE>
+	<P></P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>StartPump()</H3><BR>
+	<PRE>
+	status_t StartPump( BDataIO *input, BDataIO *output, ssize_t contentLength = 0 );</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>StopPump()</H3><BR>
+	<PRE>
+	status_t StopPump( void )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>GetTotalBytes()</H3><BR>
+	<PRE>
+	int32 GetTotalBytes( void )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>SetReadCallback()</H3><BR>
+	<PRE>
+	void SetReadCallback( status_t (*ReadFunc)(void *cookie, char *buffer, int32 size), void *cookie )</PRE>
+	<P></P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

@@ -1,0 +1,229 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: Functions</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>Functions</H1><BR>
+	
+	<P>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H3>io_printf()</H3><BR>
+	<P>Declared in: <B>DataIOUtils.h</B></P>
+	<PRE>
+	int io_printf( BDataIO *io, const char *format, ... )</PRE>
+	<P>printf() for BDataIO derived classes. This implementation calls
+	vsprintf() to print to a temporary buffer and then calls BDataIO::Write() to
+	send the string on its way. Because vsprintf() has no provisions for specifying
+	the size of the buffer, bad things will happen if the output is greater than the
+	temporary buffer size. The temporary buffer is currently 4096 bytes.</P>
+	
+	<HR>
+	<H3>io_getline()</H3><BR>
+	<P>Declared in: <B>DataIOUtils.h</B></P>
+	<PRE>
+	char *io_getline( BDataIO *io, char *dest, int32 length, char delim = '\n' )</PRE>
+	<P>Read an entire line ( excluding the <I>delim</I> character ) from
+	<I>io</I> and store it in <I>dest</I>. No more than <I>length</I> characters are
+	read.<BR><BR>
+	<B>Returns</B> NULL if error ( like eof ) and <I>dest</I> if
+	success.
+	</P>
+	
+	<HR>
+	<H3>parse_URI()</H3><BR>
+	<P>Declared in: <B>HTTPUtils.h</B></P>
+	<PRE>
+	void parse_URI( const char *URI, brokenURI *brURI )</PRE>
+	<P>Break <I>URI</I> into its sub-components, which are placed in <I>brURI</I>.<BR><BR>
+	This works on both absolute and relative URIs. The URI type and path type are
+	identified and stored in brURI->URIType and brURI->PathType respectively.</P>
+	<PRE>
+struct brokenURI
+{
+	URI_Type 	URIType;
+	
+	char		scheme[16];
+	char		host[64];
+	char		port[8];
+	
+	Path_Type	PathType;
+	
+	char		path[2048];
+	char		params[2048];
+	char		query[2048];
+};</PRE>
+	
+	<HR>
+	<H3>URI_to_string()</H3><BR>
+	<P>Declared in: <B>HTTPUtils.h</B></P>
+	<PRE>
+	char *URI_to_string( brokenURI *brURI, char *s, int32 size, bool full=true )</PRE>
+	<P>Convert a broken URI into a URI string. No more than <I>size</I> characters
+	are written to <I>s</I>. If <I>full</I> is true, an absolute URI is created, otherwise, 
+	a relative URI is created. Returns <I>s</I>.</P>
+	<BLOCKQUOTE>
+		<P><B>Absolute URI Sample:</B> http://www.foo-bar.com/foo/bar/goober.html?thingy=whatszit<BR>
+		<B>Relative URI Sample:</B> /foo/bar/goober.html?thingy=whatszit</P>
+	</BLOCKQUOTE>
+	<P>Some web servers will choke if they are sent an absolute URI; <B>don't</B> send
+	absolute URIs to web servers. Most proxy servers require an absolute URI; 
+	<B>do</B> send absolute URIs to proxy servers.</P>
+	
+	<HR>
+	<H3>get_status_str()</H3><BR>
+	<P>Declared in: <B>HTTPUtils.h</B></P>
+	<PRE>
+	const char *get_status_str( int32 status_code )</PRE>
+	<P>Converts known http Status-Codes to standard Reason-Phrase's. For example, 200
+	will return "OK" and 404 will return "Not Found."</P>
+	
+	<HR>
+	<H3>basic_authenticate()</H3><BR>
+	<P>Declared in: <B>HTTPUtils.h</B></P>
+	<PRE>
+	bool basic_authenticate( const char *basic_cookie, const char *user, const char *pass, bool encrypted=true )</PRE>
+	<P>Implements "basic" HTTP authentication. <I>basic_cookie</I> should be set to the
+	the field-value of an "WWW-Authenticate" header and if the provided <I>user</I> and 
+	<I>pass</I> match, basic_authenticate() returns true. If they don't match, false is
+	returned. If <I>encrypted</I> is true, <I>pass</I> is assumed to be encrypted; the
+	password stored in the network prefs file is encrypted.<BR><BR>
+	<B>Note:</B> If you wish to get the user and password stored in the network prefs file, you can
+	use getusername() and getpassword() declared in be/kit/net/netdb.h.<BR><BR>
+	<B>Security Note:</B> The basic authentication method is not very secure. The user
+	name and password sent with the "WWW-Authenticate" header is only thinly veiled in a
+	base64 encoded wrapper. Anyone who can decode base64 ( try decode_base64() ) can read
+	your password in plain-text if they can intercept the HTTP request. The only advantage
+	to this authentication method is it is widely supported.
+	</P>
+	<HR>
+	<H3>http_to_cgi_header()</H3><BR>
+	<P>Declared in: <B>HTTPUtils.h</B></P>
+	<PRE>
+	char *http_to_cgi_header( char *header )</PRE>
+	<P>Convert an HTTP header to CGI HTTP_* format. All characters are converted to 
+	upper-case and '_' is subsituted for '-'. "HTTP_" is NOT prefixed; you will have to
+	do this yourself if you need it.</P>
+	
+	<HR>
+	<H3>uri_esc_str()</H3><BR>
+	<P>Declared in: <B>StringUtils.h</B></P>
+	<PRE>
+	size_t uri_esc_str( char *dst, const char *src, size_t bufSize, bool usePlus = false, const char *protectedChars = "" );</PRE>
+	<P>URI encode a string. The string <I>src</I> is encoded and output to
+	<I>dst</I>. No more than <I>bufSize</I>-1 characters are copied to <I>dst</I>
+	and the resulting string length is returned. Characters from the reserved set (
+	';' | '/' | '?' | ':' | '@' | '&amp;' | SPACE | '=' | '+' | '\' | QUOTE | '#' |
+	'%' | '&lt;' | '&gt;' ) are replaced with "%xx", where xx is the hex code of the
+	character. The use of '+' in-place of a SPACE character is in common use;
+	setting <I>usePlus</I> to true will enable this convention. Reserverd characers
+	can be protected from encoding by specifing them in <I>protectedChars</I>.</P>
+	<HR>
+	
+	<H3>uri_unescape_str()</H3><BR>
+	<P>Declared in: <B>StringUtils.h</B></P>
+	<PRE>
+	size_t uri_unescape_str( char *dst, const char *src, size_t bufSize )</PRE>
+	<P>Decode a URI encoded string. The string <I>src</I> is decoded and copied to 
+	<I>dst</I> and the length of the resulting string is returned. The resulting string 
+	will be constrained to <I>bufSize</I>-1 characters. <I>src</I> and <I>dst</I> can
+	be the same address.</P>
+	<HR>
+	
+	<H3>get_next_token()</H3><BR>
+	<P>Declared in: <B>StringUtils.h</B></P>
+	<PRE>
+	const char *get_next_token( char *dest, const char *source, size_t size, const char *delim = " ", const char *quote = "" )</PRE>
+	<P>Break a string into tokens. Something like strtok() declared in
+	"string.h", but unlike strtok(), get_next_token() is thread-safe. The string
+	<I>source</I> is scanned for the next token, which is copied to <I>dest</I>. No
+	more than <I>size</I>-1 characters are copied. A pointer to the character which caused 
+	get_next_token() to stop is returned.<BR><BR>
+
+	The string <I>delim</I> specifies the characters which define token boundries.
+	All leading characters from this set as well any LWS are ignored. The first
+	character not of this set ( or LWS ) marks the first character of the token. The
+	next encountered character from the <I>delim</I> set or the '\0' character marks
+	the end of the token.<BR><BR>
+
+	If <I>quote</I> is not empty, quote characters can be used to protect characters
+	in the <I>delim</I> set. If only one quote character is provided ( Example quote
+	= "\"" ), the quote characters toggles delimiter protection. If two characters
+	are provided ( Example quote = "()" ), the first character is the begin quote
+	character and the second is the end quote character. This permits quote
+	characters to be nested.</P><BR>
+	<H3>Example 1:</H3>
+	<PRE>
+	char *string = " image/gif,    image/x-xbitmap, image/jpeg";
+	char token[64];
+	const char *s = string;
+	
+	while( *s && (s = get_next_token( token, string, 64, "," )) )
+		printf( "%s\n", token );
+	
+	OUTPUT
+	image/gif
+	image/x-xbitmap
+	image/jpeg
+	</PRE>
+	
+	<H3>Example 2:</H3>
+	<PRE>
+	char *string = "src=\"/happy picture\" width=60 height=30";
+	char token[64];
+	char fieldName[32];
+	char fieldValue[256];
+	const char *s1, *s2;
+	
+	s1 = string;
+	while( *s1 && (s2 = get_next_token( token, string, 64, ",", "\"" )) )
+	{
+		s2 = get_next_token( fieldName, token, 32, "=" );
+		s2 = get_next_token( fieldValue, token, 32, "=" );
+		printf( "Field Name: %s, Field Value: %s\n", fieldName, fieldValue );
+	}
+	
+	OUTPUT
+	Field Name: src, Field Value: "happy picture"
+	Field Name: width, Field Value: 60
+	Field Name: height, Field Value: 30
+	</PRE>
+	
+	<HR>
+	<H3>strxcpy()</H3><BR>
+	<P>Declared in: <B>StringUtils.h</B></P>
+	<PRE>
+	char *strxcpy( char *to, const char *from, size_t size )</PRE>
+	<P>Copies up to <I>size</I> characters from <I>from</I> to <I>to</I> and
+	returns a pointer to the '\0' character in <I>to</I>. This is very similar to
+	strncpy() declared in "string.h." strncpy() is not efficient when <I>size</I> is
+	large and <I>from</I> is small; it will copy all the characters from the string
+	<I>from</I> followed by as many null characters as it takes to add up to
+	<I>size</I>. This is a waste of time! strxcpy() will stop after one null
+	character.<BR><BR>
+	The behavior of strxcpy differs from strncpy by its return value as well.
+	strncpy() returns <I>to</I>, while strxcpy() returns a pointer to the null
+	character in <I>to</I>. This is usefull because you can use strxcpy() to
+	concatenate strings.
+	</P>
+	<HR>
+	
+	<H3>decode_base64</H3><BR>
+	<P>Declared in: <B>StringUtils.h</B></P>
+	<PRE>
+	size_t decode_base64( char *dst, const char *src, size_t length )</PRE>
+	<P>Decode a base64 encoded string. The base64 encoded string, <I>src</I>, is
+	decoded to the string <I>dst</I>. <I>length</I> is the size of <I>dst</I>.
+	<I>src</I> and <I>dst</I> can have the same address. The size of the decoded
+	string is returned.</P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

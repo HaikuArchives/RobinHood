@@ -1,0 +1,69 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: HTTPFileServer</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>HTTPFileServer</H1><BR>
+	
+	<P>Derived from: <B>HTTPHandler</B><BR><BR>
+	Declared in: <B>HTTPFileServer.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>HTTPFileServer()</H3><BR>
+	<PRE>
+	HTTPFileServer( const char *defaultFileName )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>~HTTPFileServer()</H3><BR>
+	<PRE>
+	virtual ~HTTPFileServer(void)</PRE>
+	<P></P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>MessageReceived()</H3><BR>
+	<PRE>
+	virtual bool MessageReceived( HTTPRequest *request )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>HTTPHandler()</H3><BR>
+	<PRE>
+	virtual HTTPHandler *NewCopy( void )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>SetWebDirectory()</H3><BR>
+	<PRE>
+	status_t SetWebDirectory( const char *webDirectory )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>HandleDefault(), HandleGet(), HandleHead(), HandlePost(), 
+	HandlePut(), HandleDelete(), HandleOptions(), HandleTrace()</H3><BR>
+	<PRE>
+	virtual bool HandleDefault( void )
+	virtual bool HandleGet( void )
+	virtual bool HandleHead( void )
+	virtual bool HandlePost( void )
+	virtual bool HandlePut( void )
+	virtual bool HandleDelete( void )
+	virtual bool HandleOptions( void )
+	virtual bool HandleTrace( void )</PRE>
+	<P></P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

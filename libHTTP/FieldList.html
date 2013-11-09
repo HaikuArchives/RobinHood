@@ -1,0 +1,63 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: FieldList</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>FieldList</H1><BR>
+	
+	<P>Derived from: <B>BList</B><BR><BR>
+	Declared in: <B>FieldList.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>FieldList()</H3><BR>
+	<PRE>
+	FieldList(int32 count = 20)</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>~FieldList()</H3><BR>
+	<PRE>
+	virtual ~FieldList(void)</PRE>
+	<P></P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>AddField()</H3><BR>
+	<PRE>
+	bool AddField( const char *field, int32 size=-1 )
+	bool AddField( const char *fieldName, const char *fieldValue )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>RemoveField(), RemoveFieldByName()</H3><BR>
+	<PRE>
+	bool RemoveField( char *fieldPtr )
+	bool RemoveFieldByName( const char *fieldName )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>FindField()</H3><BR>
+	<PRE>
+	const char *FindField( const char *fieldName, char *fieldValue = NULL, size_t n = 0 )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>MakeEmpty()</H3><BR>
+	<PRE>
+	void MakeEmpty( void )</PRE>
+	<P></P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: HTTPResponse</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>HTTPResponse</H1><BR>
+	
+	<P>Derived from: <B>HTTPMessage</B><BR><BR>
+	Declared in: <B>HTTPResponse</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	<P>This HTTPMessage derived object implements HTTP response-message specific 
+	aspects.</P>
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>HTTPResponse()</H3><BR>
+	<PRE>
+	HTTPResponse( void )</PRE>
+	<P>Calls HTTPMessage() and setup any response-message specific attributes.</P>
+	<HR>
+	
+	<H3>~HTTPResponse()</H3><BR>
+	<PRE>
+	virtual ~HTTPResponse( void )</PRE>
+	<P>Deletes the object along with any internally allocated objects like message-headers.</P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>SetStatusLine()</H3><BR>
+	<PRE>
+	void SetStatusLine( const char *status )
+	void SetStatusLine( int32 statusCode )</PRE>
+	<P>Set the status-line of the response. The first form accepts a 
+	full status-line of the format: http-version SP response-code SP reason-phrase. 
+	The second form uses the provided <I>statusCode</I> to create the 
+	status line for you.</P>
+	<P>The first version will interpret the line to set the status-code attribute.</P>
+	<HR>
+	
+	<H3>GetStatusLine()</H3><BR>
+	<PRE>
+	const char *GetStatusLine( void )</PRE>
+	<P>Returns HTTPMessage::GetStartLine().</P>
+	<HR>
+	
+	<H3>SetHTMLMessage()</H3><BR>
+	<PRE>
+	void SetHTMLMessage( int32 statusCode, const char *msg = NULL )</PRE>
+	<P>Setup a new message with a status-code of <I>statusCode</I> and create 
+	an optional temporary message body with a html message. This is usefull 
+	for quickly creating an error message with "text/html" content.</P>
+	<P>The html message is created for you automatically if you don't supply 
+	<I>msg</I> and the statusCode is >= 400. You may provide a message yourself 
+	by providing a <I>msg</I> string.</P>
+	<HR>
+	
+	<H3>GetStatusCode()</H3><BR>
+	<PRE>
+	int32 GetStatusCode( void )</PRE>
+	<P>Get the numerical status code of the message.</P>
+	<HR>
+	
+	<H3>ReceiveMessage()</H3><BR>
+	<PRE>
+	virtual int32 ReceiveMessage( BDataIO *io )</PRE>
+	<P>Implements the pure-virtual HTTPMessage::ReceiveMessage() method. See 
+	HTTPMessage::ReceiveMessage() for more information.</P>
+	<HR>
+	
+	<H3>SendMessage()</H3><BR>
+	<PRE>
+	virtual int32 SendMessage( BDataIO *io, bool simple = false )</PRE>
+	<P>Overrides the default behaviour of HTTPMessage::SendMessage(). See See 
+	HTTPMessage::SendMessage() for more information.</P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

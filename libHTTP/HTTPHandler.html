@@ -1,0 +1,74 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: HTTPHandler</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>HTTPHandler</H1><BR>
+	
+	<P>Derived from: <B>none</B><BR><BR>
+	Declared in: <B>HTTPHandler.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	<P>HTTPHandler objects are responsible for handling request messages. 
+	When a request needs to be processed, the handler is passed a 
+	HTTPRequest message through its MessageReceived() method. See HTTPListener 
+	for more information on the relation of HTTPListener to HTTPHandler.</P>
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>HTTPHandler()</H3><BR>
+	<PRE>
+	HTTPHandler( void )</PRE>
+	<P></P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>MessageReceived()</H3><BR>
+	<PRE>
+	virtual bool MessageReceived( HTTPRequest *request )</PRE>
+	<P>MessageReceived() is called when a HTTPListener needs to proccess a 
+	request. It is the responsibility of the handler to send any reply which may 
+	be needed. The return value is used to control the connection. By default, 
+	the listener-created connection thread will maintain a HTTP/1.1 connection 
+	when a HTTP/1.1 request is received. The connection-thread's 
+	will send the required HTTP/1.1 100 Continue message before it calls 
+	MessageReceived(). If for some reason the connection should need to be closed 
+	after the MessageReceived() is called, MessageReceived() should return false. 
+	Otherwise it should return true if a persistant connection can be maintained. 
+	The connection should be closed if the response sent did not include a 
+	content-length header as may be the case when CGIs and other dynamic content are 
+	involved. If the response message sent to the client did not include a content-length 
+	header it MUST contain a "Connection: close" header and MessageReceived() MUST 
+	return false in order for the client to know where the end of the entity-body 
+	is.</P>
+	<HR>
+	
+	<H3>NewCopy()</H3><BR>
+	<PRE>
+	virtual HTTPHandler *NewCopy( void )</PRE>
+	<P>Create and return a new copy of this object.</P>
+	<HR>
+	
+	<H3>ConnectionOpened()</H3><BR>
+	<PRE>
+	virtual void ConnectionOpened( const char *remote_addr )</PRE>
+	<P>This user hook is called when the connection is opened. <I>remote_addr</I> 
+	is the IP address of the remote host.</P>
+	<HR>
+	
+	<H3>ConnectionClosed()</H3><BR>
+	<PRE>
+	virtual void ConnectionClosed( status_t status )</PRE>
+	<P>This user hook is called when the connection is closed. <I>status</I> is not 
+	used at this time.</P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

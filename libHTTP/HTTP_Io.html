@@ -1,0 +1,255 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: HTTP_Io</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>HTTP_Io</H1><BR>
+	
+	<P>Derived from: <B>BPositionIO</B><BR><BR>
+	Declared in: <B>HTTP_IO.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	<P>A HTTP_Io object is a BPositionIO derived object which can perform io on
+	a remote resource specified by a URI. Much of the interface has been modeled
+	after the BFileIO object. Seeking has been implemented by means of HTTP byte
+	-ranges and will work as long as the remote server supports byte-ranges.
+	Currently only reading is supported; a later release of this library will have
+	write support as well.</P>
+	<P>A HTTP_Io object manages the connection transparently. It will even 
+	attempt to maintain a HTTP/1.1 persistant connection ( as long as the server 
+	supports persistant connections ) accross calls to SetTo(). GET and HEAD 
+	requests will be made as needed.</P>
+	<P>The following example illustrates the use of this class:</P>
+	<PRE>
+	#include "HTTP_IO.h"
+	#include &lb;stdio.h&rb;
+	
+	status_t PrintWebObject( const char *URL )
+	{
+		HTTP_Io		resource;
+		status_t	status;
+		
+		if( (status = resource.SetTo( URL, B_READ_ONLY )) == B_OK )
+		{
+			ssize_t	size;
+			char	buffer[4096];
+			
+			while( (size = resource.Read( buffer, 4096 )) > 0 )
+				fwrite( buffer, size, 1, stdout );
+			fflush( stdout );
+			return B_OK;
+		}
+		else
+			return status;
+	}
+	</PRE>
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>HTTP_Io()</H3><BR>
+	<PRE>
+	HTTP_Io( void )
+	HTTP_Io( const char *URL, uint32 openMode, bool head = true )</PRE>
+	<P>Creates a new HTTP_Io object and initializes it. The status of the 
+	initialization can be checked with InitCheck().</P>
+	<P>The default constructor does nothing and sets InitCheck() to B_NO_INIT. 
+	The object may then be initialized with SetTo().</P>
+	<P>The other constructor passes the arguments to SetTo(). See SetTo() for more 
+	information.</P>
+	<HR>
+	
+	<H3>~HTTP_Io()</H3><BR>
+	<PRE>
+	virtual ~HTTP_Io( void )</PRE>
+	<P>Frees any internally allocated storage, closes the connection if open, and 
+	deletes the object.</P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>InitCheck()</H3><BR>
+	<PRE>
+	status_t InitCheck( void )</PRE>
+	<P>Checks the state of initialization. The return value is the status of 
+	the most recent initialization. The resource specified by the URL does 
+	not have to exist for successfull initialization. See Exists.</P>
+	<H4>RETURN CODES</H4>
+	<UL>
+		<LI>B_OK. The object has been initialized and is ready to use.</LI>
+		<LI>B_NO_INIT. The object has not been initialized.</LI>
+		<LI><I>See SetTo() for other errors.</I></LI>
+	</UL>
+	<HR>
+	
+	<H3>Exists()</H3><BR>
+	<PRE>
+	bool Exists( void )</PRE>
+	<P>Verify a valid response was returned by the host specified in the URL. This
+	method will perform a HEAD request if HEAD or GET has not been previously
+	called. Exists() may return true even if the resource specified in the URL 
+	does not. Check the StatusCode() to verify a successfull request. If it's not a
+	2xx response-code, the entity-body may only contain an expanation for the
+	error.</P>
+	<H4>RETURN VALUES</H4>
+	<UL>
+		<LI>true. The host specified in the URL was contacted and something was returned.</LI>
+		<LI>false. The host could not be contacted or an invalid response was returned.</LI>
+	</UL>
+	<HR>
+	
+	<H3>IsReadable(), IsWritable()</H3><BR>
+	<PRE>
+	bool IsReadable( void )
+	bool IsWritable( void )</PRE>
+	<P>Check permissions. The permissions are set when the object is initialized
+	with SetTo(). Currently only reading is supported. Both return false if the
+	object has not been initialized.</P>
+	<HR>
+	
+	<H3>Read(), ReadAt()</H3><BR>
+	<PRE>
+	virtual ssize_t Read( void *buffer, size_t numBytes )
+	virtual ssize_t ReadAt( off_t position, void *buffer, size_t numBytes )</PRE>
+	<P>Read from the resource specified by SetTo(). They 
+	read from the entity-body of the HTTP response, the headers are 
+	not included here. See the BPositionIO class for general information on their use.</P>
+	<P>-1 is returned if a failure occured such as eof or an io error. Otherwise 
+	the number of bytes successfully read is returned.</P>
+	<P>You may call Read( NULL, 0 ) if you wish to verify the response-code, 
+	examine response headers, or verify the resource size and mime-type before actaully 
+	reading the from the entity-body. This avoids the additional overhead of a 
+	HEAD request being made before the GET request.</P>
+	<P>ReadAt calls Seek() before attempting to Read(). The use of ReadAt() is 
+	discouraged because it is possible for the Seek() to fail. ReadAt() returns 
+	-1 if a Seek() failure occurs.</P>
+	<HR>
+	
+	<H3>Write(), WriteAt()</H3><BR>
+	<PRE>
+	virtual ssize_t Write( const void *buffer, size_t numBytes )
+	virtual ssize_t WriteAt( off_t position, const void *buffer, size_t numBytes )</PRE>
+	<P>Not implementented at this time.</P>
+	<HR>
+	
+	<H3>Seek(), Position()</H3><BR>
+	<PRE>
+	virtual off_t Seek( off_t position, uint32 mode )
+	virtual off_t Position( void )</PRE>
+	<P>Seek() attempts to set the position in the entity-body from which the 
+	next Read() will retrieve data. Position() returns the current offset from 
+	the start of the entity body.</P>
+	<P>Seek() may fail if the web server does not support byte-ranges. Check the
+	return value of Seek() to verify success. Seek calls Read( NULL, 0 ) to 
+	check for success.</P>
+	<HR>
+	
+	<H3>SetTo(), Unset()</H3><BR>
+	<PRE>
+	status_t SetTo( const char *URL, uint32 openMode, bool head = true )
+	void Unset( void )</PRE>
+	<P>Initialize the object with the specified URL and openMode. Currently 
+	B_READ_ONLY is the only supported open mode. If <I>head</I> 
+	is true, Exists() is called and B_ENTRY_NOT_FOUND not found will be 
+	returned if it returns false. If head is false, no attempt is made 
+	to verify the the resource exists. This may be usefull if you wish to avoid 
+	the overhead of HEAD request.</P>
+	<P>SetTo() returns B_OK on success and an error code in all other cases.</P>
+	<P>Unset() frees the internally allocated storage associated with calling 
+	SetTo() and resets InitStatus() to B_NO_INIT. It's not a given the connection 
+	will be closed if persistant connections are being used. Call CloseConnection() 
+	if you wish ensure the connection is closed. CloseConnection() will normally be called 
+	automatically as needed.</P>
+	
+	<HR>
+	
+	<H3>GetURL()</H3><BR>
+	<PRE>
+	const char *GetURL( void )</PRE>
+	<P>Returns the URL specified in the last call to SetTo() or a null string 
+	if SetTo() has not been called.</P>
+	<HR>
+	
+	<H3>GetType(), GetSize()</H3><BR>
+	<PRE>
+	status_t GetType( char *type )
+	status_t GetSize( off_t *size )</PRE>
+	<P>Retrieve the mime-type or content-length of the entity-body. Returns 
+	B_NO_INIT if the object has not been initialized or an error code if 
+	Exists() was not successfull. Returns B_OK if successfull.</P>
+	<P>If the mime-type was not specified in the HTTP response, a default 
+	mime-type of "application/octet-stream" is used.</P>
+	<P>If the content-length was not specified, GetSize() sets size to -1. 
+	The length of such an entity can be determined by reading until eof.</P>
+	<HR>
+	
+	<H3>GetStatusCode(), GetStatusLine()</H3><BR>
+	<PRE>
+	status_t GetStatusCode( int32 *statusCode )
+	status_t GetStatusLine( char *statusLine, int32 size )</PRE>
+	<P>Get the status-code or status-line of the response. Returns 
+	B_NO_INIT if the object has not been initialized or an error code if 
+	Exists() was not successfull. Returns B_OK if successfull.</P>
+	<P>Status codes in the range of 2xx indicate success. You should expect a 
+	status code of 200 for most requests or 206 if a Seek() request was successfull. 
+	Status codes in the 3xx range indicate redirection, 4xx codes indicate 
+	client errors, and 5xx indicate server errors. 404 indicates the resource 
+	specified by the URL was not found. See RFC 2068 for a detailed explanation 
+	of all possible result codes.
+	</P>
+	<P>GetStatusLine() retrieves the status-line sent by the server. It includes 
+	the HTTP version being used, the status code, and a human readable result phrase.<BR> 
+	<B>Example:</B> HTTP/1.1 404 Not Found</P>
+	<HR>
+	
+	<H3>FindHeader(), HeaderAt()</H3><BR>
+	<PRE>
+	const char *FindHeader( const char *fieldName, char *fieldValue=NULL, size_t n=0 )
+	const char *HeaderAt( int32 index )</PRE>
+	<P>Retrieve HTTP headers sent by the server in the response. FindHeader() 
+	searches for a header with a field-name of <I>fieldName</I> and places 
+	the field-value in <I>fieldValue</I> if the header was found. HeaderAt()  
+	retrieves the header at the specified index. Index values range from 0 to n, 
+	where n is the total number of headers -1.</P>
+	<P>Both FindHeader() and HeaderAt() return the entire header-line if 
+	found or in range respecively; otherwise, they return NULL.</P>
+	<P>A header-line has the following format:<BR>
+	field-name ":" [LWS] field-value</P>
+	<HR>
+	
+	<H3>CountHeaders()</H3><BR>
+	<PRE>
+	int32 CountHeaders( void )</PRE>
+	<P>Returns the total number of headers sent in the response.</P>
+	<HR>
+	
+	<H3>UseProxy()</H3><BR>
+	<PRE>
+	void UseProxy( const char *proxyHost, uint16 proxyPort )</PRE>
+	<P>UseProxy() tells the HTTP_Io object to make the conneciton 
+	through a proxy server instead directly to the host specified in the 
+	URL. <I>proxyHost</I> is the network name or IP address of proxy server. 
+	<I>proxyPort</I> specifies the TCP port on which the proxy server accepts 
+	connections. Ususally this is 8080.</P>
+	<HR>
+	
+	<H3>AddHeaders()</H3><BR>
+	<PRE>
+	virtual void AddHeaders( void )</PRE>
+	<P>This protected hook method allows you to attach custom headers to 
+	the HTTP requests made by the object. The default implementation adds the 
+	header "User-Agent: libHTTP"</P>
+	<P>Headers are added by calling HTTPMessage::AddHeader(). For the purposes 
+	of this hook method, you may add headers by the following calls:<BR><BR>
+	
+	request->AddHeader( const char *headerLine );<BR>
+	request->AddHeader( const char *fieldName, const char *fieldValue );
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>

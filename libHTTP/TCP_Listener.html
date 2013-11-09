@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: TCP_Listener</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>TCP_Listener</H1><BR>
+	
+	<P>Derived from: <B>TCP_IO</B><BR><BR>
+	Declared in: <B>TCP_IO.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>TCP_Listener()</H3><BR>
+	<PRE>
+	TCP_Listener( unsigned short port, int acceptance_count = 5 )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>~TCP_Listener()</H3><BR>
+	<PRE>
+	virtual ~TCP_Listener( void )</PRE>
+	<P></P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>GetPort()</H3><BR>
+	<PRE>
+	unsigned short GetPort( void )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>GetAcceptanceCount()</H3><BR>
+	<PRE>
+	int GetAcceptanceCount( void )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>Accept()</H3><BR>
+	<PRE>
+	int Accept( void )
+	int Accept( struct sockaddr_in *client_interface )</PRE>
+	<P></P>
+	
+	<HR>
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	<BR><BR>
+	This library is free software; you can redistribute it and/or 
+	modify it under the terms of the GNU Library General Public 
+	License as published by the Free Software Foundation; either 
+	version 2 of the License, or (at your option) any later version. 
+	</P>
+	
+</BODY>
+</HTML>

@@ -1,0 +1,67 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>libHTTP: BufferedIO</title>
+</HEAD>
+<BODY bgcolor="FFFFFF">
+	<HR>
+	<H1>BufferedIO</H1><BR>
+	
+	<P>Derived from: <B>BDataIO</B><BR><BR>
+	Declared in: <B>BufferIO.h</B><BR><BR>
+	Library: <B>libHTTP.so</B><BR></P>
+	<HR>
+	<H2>Overview</H2><BR>
+	
+	<HR><H2>Constructor and Destructor</H2><HR>
+	
+	<H3>BufferedIO()</H3><BR>
+	<PRE>
+	BufferedIO( BDataIO *childIO = NULL, size_t bufferSize = 4096 )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>~BufferedIO()</H3><BR>
+	<PRE>
+	virtual ~BufferedIO( void )</PRE>
+	<P></P>
+	
+	<HR><H2>Member Functions</H2><HR>
+	
+	<H3>DoAllocate()</H3><BR>
+	<PRE>
+	status_t DoAllocate( void )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>SetChildIO()</H3><BR>
+	<PRE>
+	void SetChildIO( BDataIO *childIO )</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>Read()</H3><BR>
+	<PRE>
+	virtual ssize_t Read(void *buffer, size_t numBytes)</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>Write()</H3><BR>
+	<PRE>
+	virtual ssize_t Write(const void *buffer, size_t numBytes)</PRE>
+	<P></P>
+	<HR>
+	
+	<H3>Sync()</H3><BR>
+	<PRE>
+	int Sync( void )</PRE>
+	<P></P>
+	<HR>
+	
+	<P><H3>libHTTP - A high-level HTTP API for the BeOS</H3><BR>
+	Copyright (C) 1999 Joe Kloss<BR>
+	</P>
+	
+</BODY>
+</HTML>
