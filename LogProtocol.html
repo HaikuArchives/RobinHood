@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML lang="en">
+<HEAD>
+	<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<TITLE>Robin Hood Log Protocol (RHLP)</TITLE>
+</HEAD>
+<BODY bgcolor="#14458E" text="#FFFFFF" link="#84B5FE" vlink="#84B5FE" alink="#84B5FE">
+	<CENTER><TABLE align="CENTER" border=0 width="100%" CELLSPACING="0"><TR bgcolor="#04357E">
+	<TD width="100%" height="45" ALIGN="CENTER" valign="CENTER"><font COLOR="#FFFFFF" size="+3">
+	Robin Hood Log Protocol (RHLP) <IMG SRC="RHicon.gif" ALIGN="absmiddle"></FONT></TD>
+	<TD height="45" ALIGN="RIGHT" valign="CENTER"><A HREF="index.html"><IMG SRC="home.gif" ALIGN="absmiddle" BORDER="0"></A>&nbsp;&nbsp;&nbsp;</TD>
+	</TR></TABLE></CENTER>
+	<UL>
+	Any BeApp which has a BApplication object can receive log data from the 
+	rhdaemon. To start receiving log messages, an application sends a BMessage 
+	containing a BMessenger to the rhdaemon's BApplication object (main thread). 
+	The BMessenger's target should be the BLooper and BHandler intended to receive 
+	the log messages. The message has a type code of MSG_ADD_LOG_SERVER and should 
+	contain a field named "log messenger" containing your BMessenger.</P>
+	<P>For example if you wanted your BApplication to receive log messages:</P>
+	<FONT COLOR="#6495DE"><PRE>
+#include "RHMessages.h"
+status_t RequestLogMessages( void )
+{
+	status_t status;
+	
+	BMessenger msgr( RH_APP_SIG, -1, &status );
+	if( status != B_OK )
+		return status;
+	
+	BMessage msg( MSG_ADD_LOG_SERVER );
+	
+	msg.AddMessenger( "log messenger", be_app_messenger );
+	return msgr.SendMessage( &msg );
+}	
+	</PRE></FONT>
+	<P>Log-entry messages are sent to your targeted BLooper/BHandler. The 
+	log-entry message has a type code of MSG_LOG and contains a string field 
+	named "log string."</P>
+	<P>An example of receiving log messages:</P>
+	<FONT COLOR="#6495DE"><PRE>
+#include "RHMessages.h"
+void MyHandler::MessageReceived( BMessage *message )
+{
+	switch( message->what )
+	{
+		case MSG_LOG:
+		{
+			const char *s;
+			s = message->FindString( "log string" );
+			printf( "%s", s );
+			break;
+		}
+		...
+		</PRE></FONT>
+	<P>Each log-entry has the following format ( augmented Backus-Naur Form, see 
+	RFC 2068 or RFC 822 ):</P>
+	<BLOCKQUOTE>
+		<P>log-entry = connection-sn SP field-type ":" [field] NL<BR>
+		connection-sn = 1*DIGIT<BR>
+		field-type = 1*32(ALPHA | DIGIT | "-")<BR>
+		field = 1*(TEXT)</P>
+		
+		Example:<BR><BR>
+
+		1 Open: 192.168.0.3 Tue, 30 Mar 1999 12:26:34<BR>
+		1 Request-Line: GET /foo.html HTTP/1.1<BR>
+		1 Header: User-Agent: Mozilla/3.0 (compatible; NetPositive/2.0.1; BeOS)<BR>
+		1 Header: Accept: image/gif, image/jpeg, image/pjpeg, */*<BR>
+		1 Header: Referer: http://www.foo.bar.com/<BR>
+		1 Header: Host: www.foo.bar.com<BR>
+		1 Status-Line: HTTP/1.1 200 OK<BR>
+		1 Sending: 2098 /boot/home/public_html/foo.html<BR>
+		1 Sent: 2098 bytes 2650 ms 2262 bytes/second<BR>
+		1 Close: Tue, 30 Mar 1999 12:26:37
+	</BLOCKQUOTE>
+	<P>Log entries with the same connection-sn ( connection serial number ) are 
+	related to each other. The connection-sn identifies which TCP connection the 
+	log entry is associated with. If the client supports HTTP/1.1 persistant 
+	connections, more than one HTTP request may be made over the same 
+	connection.</P><BR>
+	
+	<FONT SIZE="+2"><B>Defined Field-Types</B></FONT><P>
+	<UL>
+		<LI><FONT COLOR="#6495DE"><B>Open</B></FONT> - A new connection was opened and will be further 
+		identified by the connection-sn. Field contains the remote IP address 
+		as well as the time the connection was opened.
+		<BLOCKQUOTE>
+			open-field = remote-address SP date<BR>
+			remote-address = 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT "." 1*3DIGIT ; An 
+			IP address<BR><BR>
+			1 Open: 192.168.0.3 Tue, 30 Mar 1999 12:26:34
+		</BLOCKQUOTE></LI>
+		
+		<LI><FONT COLOR="#6495DE"><B>Close</B></FONT> - The connection identified by the connection-sn was 
+		closed; no further log-entries with this connection-sn should be expected. 
+		The time of the close is noted in the close-field.
+		<BLOCKQUOTE>
+			close-field = date<BR><BR>
+			1 Close: Tue, 30 Mar 1999 12:26:37
+		</BLOCKQUOTE></LI>
+		
+		<LI><FONT COLOR="#6495DE"><B>Request-Line</B></FONT> - A new HTTP request has been made on this 
+		connection. The request-field contains the Request-Line send by the client.
+		<BLOCKQUOTE>
+			request-field = Request-Line ; HTTP Request-Line as 
+			specified in RFC 2068<BR><BR>
+			1 Request-Line: GET / HTTP/1.1
+		</BLOCKQUOTE></LI>
+		
+		<LI><FONT COLOR="#6495DE"><B>Header</B></FONT> - Header fields may follow a "Request-Line" and contain 
+		the HTTP Request-Headers sent by the client.
+		<BLOCKQUOTE>
+			header-field = request-header ; HTTP Request-Header as 
+			specified in RFC 2068<BR><BR>
+			1 Header: Referer: http://www.foo.bar.com/
+		</BLOCKQUOTE></LI>
+		
+		<LI><FONT COLOR="#6495DE"><B>Status-Line</B></FONT> - The HTTP Status-Line sent by the server.
+		<BLOCKQUOTE>
+			status-field = Status-Line ; HTTP Status-Line as specified 
+			in RFC 2068<BR><BR>
+			1 Status-Line: HTTP/1.1 200 OK
+		</BLOCKQUOTE></LI>
+		
+		<LI><FONT COLOR="#6495DE"><B>Sending</B></FONT> - A file, specified by "resource", is being sent. 
+		The size of the resource is specified in content-length. This may be 
+		less than the size of the document if the "Range" header was used.
+		<BLOCKQUOTE>
+			sending-field = content-length SP resource
+			content-length = 1*DIGIT<BR>
+			resource = abs_path ; Absolue path of resource on server<BR>
+			abs_path = 1*("/" node )<BR>
+			node = ; any legal file name character<BR><BR>
+			1 Sending: 2098 /boot/home/public_html/foo.html
+		</BLOCKQUOTE></LI>
+		
+		<LI><FONT COLOR="#6495DE"><B>Sent</B></FONT> - The file specified by the sending-field has 
+		been sent. Statistics are displayed about the file transfer.
+		<BLOCKQUOTE>
+			sent-field = bytes-sent "bytes" SP time-to-send "ms" SP bytes-per-second "bytes/second"
+			bytes-sent = 1*DIGIT ; total bytes actually sent. 
+			This may be less than content-lenth if an error occured.<BR>
+			time-to-send = 1*DIGIT ; time to send file response in miliseconds<BR>
+			bytes-per-second 1*DIGIT ; this may be inaccurate for small files
+			<BR><BR>
+			1 Sent: 2098 bytes 2650 ms 2262 bytes/second
+		</BLOCKQUOTE></LI>
+		
+		<LI><FONT COLOR="#6495DE"><B>Exec</B></FONT> - A CGI has been executed.
+		<BLOCKQUOTE>
+			exec-field = cgi_path
+			cgi_path = abs_path ; Absolute path of CGI being executed.<BR><BR>
+			1 Exec: /boot/home/public_html/cgi-bin/fortune
+		</BLOCKQUOTE></LI>
+	</UL>
+	</UL>
+	<HR>
+	<FONT COLOR="#FEB584">Robin Hood Web Server for BeOS</FONT><BR>
+	Copyright &#169; 1999-2001<BR>
+	The Robin Hood Development Team (see <A HREF="Revision.html">Revision History</A> for details)
+	<P><FONT COLOR="#4488FF">Be</FONT><FONT COLOR="#FF8844">OS</FONT> is a registered trademark of Be Inc.<BR><BR>
+	
+</BODY>
+</HTML>
