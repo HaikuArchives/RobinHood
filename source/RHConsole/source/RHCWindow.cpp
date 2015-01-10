@@ -23,6 +23,7 @@
 #include <time.h>
 #include <MenuBar.h>
 #include <MenuItem.h>
+#include <File.h>
 #include <FindDirectory.h>
 #include <Directory.h>
 #include <Entry.h>

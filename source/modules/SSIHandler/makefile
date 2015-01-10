@@ -111,5 +111,3 @@ APP_VERSION =
 
 ## include the makefile-engine
 include $(BUILDHOME)/etc/makefile-engine
-install:
-	cp $(TARGET) $(OBJ_DIR)/../../../../server/robin_hood_modules/

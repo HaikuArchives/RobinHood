@@ -287,7 +287,7 @@ status_t handle_request( RequestPB *pb )
 		
 		io_printf( &bufio, "%s\r\n", headBuffer );
 		ioPump.StartPump( &pipeIO, &bufio, contentLength );
-		bufio.Sync();
+		bufio.Flush();
 		persistant = false;
 	}
 	else // using Parsed Header Output

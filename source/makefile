@@ -9,7 +9,7 @@ dirs := \
 default install clean:
 	@for dir in $(dirs); do \
 		if [ -d "$$dir" ]; then \
-			$(MAKE) -C $$dir $@; \
+			INSTALL_DIR=../server $(MAKE) -C $$dir $@; \
 		fi \
 	done
 
