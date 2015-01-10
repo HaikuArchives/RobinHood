@@ -1,3 +1,18 @@
+resource app_signature "application/x-vnd.kirilla-robinhoudini";
+
+resource app_version {
+	major  = 1,
+	middle = 0,
+	minor  = 0,
+
+	variety = B_APPV_FINAL,
+	internal = 0,
+
+	short_info = "Robin Houdini",
+	long_info = "Robin Houdini"
+};
+
+resource app_flags B_SINGLE_LAUNCH;
 
 resource(0, "BEOS:L:application/x-vnd.be-directory") #'ICON' array {
 	$"FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF"
@@ -160,21 +175,3 @@ resource(2, "BEOS:M:application/x-vnd.ms-ie-url") #'MICN' array {
 	$"0F3F3F3F3F3F000000000000000000FF"
 	$"00000000000000FFFFFFFFFFFFFFFFFF"
 };
-
-resource file_types message;
-
-resource app_signature "application/x-vnd.kirilla-robinhoudini";
-
-resource app_version {
-	major  = 1,
-	middle = 0,
-	minor  = 0,
-
-	variety = B_APPV_FINAL,
-	internal = 0,
-
-	short_info = "Robin Houdini",
-	long_info = "Robin Houdini"
-};
-
-resource app_flags B_SINGLE_LAUNCH;
