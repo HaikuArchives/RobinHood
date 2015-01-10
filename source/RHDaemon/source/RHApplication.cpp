@@ -128,27 +128,24 @@ bool RHApp::QuitRequested( void )
 
 void RHApp::ReadyToRun( void )
 {
-	app_info	info; // info.ref
-	BEntry		entry;
-	BPath		moduleDir;
-	GetAppInfo( &info );
+	char **paths = 0;
+	size_t path_count;
 	
-	entry.SetTo( &info.ref );
-	entry.GetParent( &entry );
-	entry.GetPath( &moduleDir );
-	moduleDir.Append( "robin_hood_modules/" );
-	entry.SetTo( moduleDir.Path() );
-	
-	if( !entry.Exists() )
-	{
-		find_directory( B_USER_ADDONS_DIRECTORY, &moduleDir );
-		moduleDir.Append( "robin_hood_modules/" );
+	find_paths(B_FIND_PATH_ADD_ONS_DIRECTORY, "robin_hood_modules/", &paths, &path_count);
+
+	if (paths == 0 || path_count == 0) // no modules found
+		Quit();
+
+	for (size_t i = 0; i < path_count; i++) {
+		BPath moduleDir(paths[i]);
+		HModuleRoster *r = new HModuleRoster();
+		r->LoadModules(&moduleDir);
+		r->StartWatching(&moduleDir);
+		AddHandler(r);
 	}
 	
-	hmodule_roster = new HModuleRoster;
-	hmodule_roster->LoadModules( &moduleDir );
-	AddHandler( hmodule_roster );
-	hmodule_roster->StartWatching( &moduleDir );
+	free(paths);
+
 	StartServers();
 }
 

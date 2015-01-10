@@ -610,26 +610,16 @@ void RHCWindow::WelcomeToRobinHood()
 {
 	Lock();
 
-	static const char	*s1 = "Welcome to the Robin Hood Web Server for ";
-	static const char	*s2 = "Be";
-	static const char	*s3 = "OS\n";
+	static const char	*s1 = "Welcome to the Robin Hood Web Server for Haiku\n";
 
 	BFont		font;
 	uint32		fontProperties;
 	rgb_color	standardColor = {225, 225, 225, 255};
 	rgb_color	rgbColor = {195, 195, 195, 255};
-	rgb_color	rgbColor2 = {95, 175, 255, 255};
-	rgb_color	rgbColor3 = {255, 135, 135, 255};
 
 	logView->GetFontAndColor( &font, &fontProperties );
 	logView->SetFontAndColor( &font, B_FONT_ALL, &rgbColor );
-	logView->Insert( logView->TextLength(), s1, 41 );
-	logView->ScrollToOffset( logView->TextLength() );
-	logView->SetFontAndColor( &font, B_FONT_ALL, &rgbColor2 );
-	logView->Insert( logView->TextLength(), s2, 2 );
-	logView->ScrollToOffset( logView->TextLength() );
-	logView->SetFontAndColor( &font, B_FONT_ALL, &rgbColor3 );
-	logView->Insert( logView->TextLength(), s3, 3 );
+	logView->Insert( logView->TextLength(), s1, strlen(s1) );
 	logView->ScrollToOffset( logView->TextLength() );
 	logView->SetFontAndColor( &font, B_FONT_ALL, &standardColor );
 
