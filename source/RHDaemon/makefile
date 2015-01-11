@@ -42,7 +42,7 @@ SRCS= source/HModule.cpp \
 
 #	specify the resource files to use
 #	full path or a relative path to the resource file can be used.
-RSRCS= $(NAME).rsrc
+RDEFS= $(NAME).rsrc
 
 # @<-src@ 
 #%}
