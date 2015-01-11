@@ -69,8 +69,7 @@ SYSTEM_INCLUDE_PATHS =
 #	additional paths to look for local headers
 #	thes use the form: #include "header"
 #	source file directories are automatically included
-LOCAL_INCLUDE_PATHS = ../../common/ \
-	$(shell findpaths -e -c " " B_FIND_PATH_HEADERS_DIRECTORY libHTTP)
+LOCAL_INCLUDE_PATHS = ../../common/ $(LIBHTTP_H)
 
 #	specify the level of optimization that you desire
 #	NONE, SOME, FULL

@@ -46,6 +46,7 @@ status_t HModuleRoster::StartWatching( BPath *moduleDirectory )
 {
 	if( watching )
 		return B_ERROR;
+	printf("Watching %s\n", moduleDirectory->Path());
 	BEntry		entry;
 	
 	if( (entry.SetTo( moduleDirectory->Path() ) == B_OK)&&

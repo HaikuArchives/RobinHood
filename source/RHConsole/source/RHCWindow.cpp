@@ -19,6 +19,7 @@
 #include <Application.h>
 #include <ScrollView.h>
 #include <TextView.h>
+#include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
 #include <MenuBar.h>
