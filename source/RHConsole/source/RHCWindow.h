@@ -3,6 +3,8 @@
 
 #include <Window.h>
 #include <Message.h>
+
+class BAlert;
 class BTextView;
 class BMenuItem;
 class BStringView;

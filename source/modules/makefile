@@ -12,6 +12,6 @@ dirs := \
 default install clean:
 	@for dir in $(dirs); do \
 		if [ -d "$$dir" ]; then \
-			$(MAKE) -C $$dir $@; \
+			INSTALL_DIR=../../server/robin_hood_modules $(MAKE) -C $$dir $@; \
 		fi \
 	done

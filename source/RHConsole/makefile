@@ -38,7 +38,7 @@ SRCS= source/main.cpp \
 
 #	specify the resource files to use
 #	full path or a relative path to the resource file can be used.
-RSRCS= $(NAME).rsrc
+RDEFS = $(NAME).rsrc
 
 # @<-src@ 
 #%}
@@ -55,7 +55,7 @@ RSRCS= $(NAME).rsrc
 #		naming scheme you need to specify the path to the library
 #		and it's name
 #		library: my_lib.a entry: my_lib.a or path/my_lib.a
-LIBS= be ../lib/libHTTP.so
+LIBS= be HTTP $(STDCPPLIBS)
 
 #	specify additional paths to directories following the standard
 #	libXXX.so or libXXX.a naming scheme.  You can specify full paths
@@ -73,7 +73,7 @@ SYSTEM_INCLUDE_PATHS =
 #	additional paths to look for local headers
 #	thes use the form: #include "header"
 #	source file directories are automatically included
-LOCAL_INCLUDE_PATHS = ../common/ ../common/libHTTPHeaders/
+LOCAL_INCLUDE_PATHS = ../common/ $(LIBHTTP_H) $(shell echo $(LIBHTTP_H) >&2)
 
 #	specify the level of optimization that you desire
 #	NONE, SOME, FULL
@@ -114,7 +114,7 @@ LINKER_FLAGS =
 APP_VERSION = 
 
 ## include the makefile-engine
-include $(BUILDHOME)/etc/makefile-engine
+DEVEL_DIRECTORY := \
+	$(shell findpaths -r "makefile_engine" B_FIND_PATH_DEVELOP_DIRECTORY)
+include $(DEVEL_DIRECTORY)/etc/makefile-engine
 
-install:
-	cp $(TARGET) $(OBJ_DIR)/../../../
