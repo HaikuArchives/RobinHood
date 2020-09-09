@@ -7,10 +7,10 @@ dirs := \
 	modules
 
 ifneq ($(shell getarch), $(shell getarch -p))
-LIBHTTP_H = \
+LIBHTTP_H ?= \
 	$(shell findpaths -e -a `getarch` -c " " B_FIND_PATH_HEADERS_DIRECTORY libHTTP)
 else
-LIBHTTP_H = \
+LIBHTTP_H ?= \
 	$(shell findpaths -e -c " " B_FIND_PATH_HEADERS_DIRECTORY libHTTP)
 endif
 

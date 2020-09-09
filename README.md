@@ -35,3 +35,15 @@ Features:
   - Virtual Resources.
   - Multiport capacity.
   - Separation of user interface and server.
+
+## Requirements
+
+* libHTTP
+
+## Compiling
+
+libHTTP is a requirement to build. Instead of installing libHTTP, you can also specify the location
+of the libHTTP headers + libraries at build time.
+
+Example:
+```LIBHTTP_H=/Data/libHTTP/headers LIBHTTP_L=/Data/libHTTP/objects.x86_64-cc8-debug make```
