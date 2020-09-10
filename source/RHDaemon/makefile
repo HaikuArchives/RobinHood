@@ -59,7 +59,7 @@ RDEFS= $(NAME).rsrc
 #		naming scheme you need to specify the path to the library
 #		and it's name
 #		library: my_lib.a entry: my_lib.a or path/my_lib.a
-LIBS= be HTTP $(STDCPPLIBS)
+LIBS= be network $(LIBHTTP_L) $(STDCPPLIBS)
 
 #	specify additional paths to directories following the standard
 #	libXXX.so or libXXX.a naming scheme.  You can specify full paths
@@ -67,7 +67,7 @@ LIBS= be HTTP $(STDCPPLIBS)
 #	be recursive, so include all of the paths where libraries can
 #	be found.  Directories where source files are found are
 #	automatically included.
-LIBPATHS= $(LIBHTTP_L)
+LIBPATHS= 
 
 #	additional paths to look for system headers
 #	thes use the form: #include <header>
@@ -77,7 +77,7 @@ SYSTEM_INCLUDE_PATHS =
 #	additional paths to look for local headers
 #	thes use the form: #include "header"
 #	source file directories are automatically included
-LOCAL_INCLUDE_PATHS = $(LIBHTTP_H)
+LOCAL_INCLUDE_PATHS = ../libHTTP/headers/
 
 #	specify the level of optimization that you desire
 #	NONE, SOME, FULL
