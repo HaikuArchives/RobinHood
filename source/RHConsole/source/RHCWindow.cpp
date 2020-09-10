@@ -423,7 +423,7 @@ void RHCWindow::SetupChildren( void )
 	mainView->SetViewColor( 195, 195, 195 );
 	AddChild( mainView );
 	
-	BRect		frame( 5, 50, kWindowW-19, kWindowH-5 );
+	BRect		frame( 5, 52, kWindowW-19, kWindowH-5 );
 	BRect		textRect( 0, 0, kWindowW-25, 0 );
 	logView = new BTextView( frame, "", textRect, B_FOLLOW_ALL_SIDES, B_WILL_DRAW | B_FRAME_EVENTS );
 	BScrollView *scrollView = new BScrollView( "", logView, 
@@ -439,9 +439,9 @@ void RHCWindow::SetupChildren( void )
 
 	mainView->AddChild( scrollView );
 	
-	serverStatusV = new BStringView( BRect( 5, 25, 150, 35 ), "", "" );
+	serverStatusV = new BStringView( BRect( 5, 25, 150, 40 ), "", "" );
 	mainView->AddChild( serverStatusV );
-	connectionsV = new BStringView( BRect( 5, 37, 150, 47 ), "", "" );
+	connectionsV = new BStringView( BRect( 5, 37, 150, 52 ), "", "" );
 	mainView->AddChild( connectionsV );
 
 	
